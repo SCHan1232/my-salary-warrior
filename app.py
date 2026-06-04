@@ -5,9 +5,9 @@ import random
 
 # 1. 껄무새 다크모드 기반 최적화 설정
 st.set_page_config(
-    page_title="✨ 껄무새 - 2030 필수 자산 케어 v25", 
+    page_title="✨ 껄무새 - 2030 필수 자산 케어 v26", 
     page_icon="🦜",
-    layout="wide"  # 좌우 분할을 위한 와이드 레이아웃
+    layout="wide"  # 와이드 레이아웃
 )
 
 # 2. ⚡ 부장님 감지 패닉 버튼
@@ -88,7 +88,7 @@ else:
         </div>
     """, unsafe_allow_html=True)
 
-    # 2.5 대 0.8 비율 유지
+    # 좌우 분할 구조 레이아웃
     main_layout, chat_layout = st.columns([2.5, 0.8], gap="medium")
 
     # ==================== [LEFT SIDE] 메인 기능 영역 ====================
@@ -173,7 +173,7 @@ else:
                         }
                         card_info = custom_cards.get(selected_option, {"title": "🛍️ 프로 탕진러", "desc": "지출로 도파민을 채우며 우량주 투자 타이밍을 놓치신 직장인 명예 주주"})
                 else:
-                    card_info = {"title": "🛡️ 자산 수호 헷지 명인", "desc": "폭락 사이클을 예리한 자산 우회 방어로 피해 가며 내 통장의 순수 가치를 사수해 낸 위대한 금융 트레이더"}
+                    card_info = {"title": "🛡️ 자산 수호 헷지 명인", "desc": "폭락 사이클을 영리한 탕진 소비로 우회 방어해 낸 금융 위기관리의 천재"}
 
                 # 대화방 연동용 세션 저장
                 st.session_state["current_audit"] = {
@@ -183,7 +183,7 @@ else:
                     "grade": card_info["title"]
                 }
 
-                # 세부 정산 리포트
+                # 데이터 출력 리포트
                 st.write("---")
                 st.markdown(f"<h3 style='color: #FFFFFF; font-size: 17px;'>🔍 0. 데이터 신뢰성 검증 리포트</h3>", unsafe_allow_html=True)
                 val_col1, val_col2 = st.columns(2)
@@ -257,11 +257,18 @@ else:
             st.progress(int(per_A))
             st.caption(f"📊 주주 배틀 현황: 🅰️ {per_A:.1f}% vs 🅱️ {100-per_A:.1f}% (총 {total_votes}명 의결권 행사)")
 
-    # ==================== [RIGHT SIDE] 우측 고정방 및 실시간 인원 카운터 ====================
+    # ==================== 🛠️ [RIGHT SIDE] 하이퍼 리얼 100% 실시간 접속 수 카운팅 위젯 ====================
     with chat_layout:
-        # 🛠️ [신규 기믹 장착] 동적 연출 효과가 반영된 실시간 루팡 인원수 표기
-        live_users = random.randint(115, 145)
-        st.markdown(f"<h3 style='margin-top:23px; font-size:16px;'>💬 실시간 오픈방 <span style='font-size:12px; color:#81C995; font-weight:normal;'>🟢 {live_users}명 루팡 중</span></h3>", unsafe_allow_html=True)
+        # 🟢 연출 코드를 완벽히 제거하고, Streamlit 메모리에 상주하는 실제 브라우저 커넥션(세션) 수 조사 자동 연동!
+        try:
+            from streamlit.runtime.runtime import Runtime
+            stats = Runtime.instance()._session_mgr.list_active_sessions()
+            real_active_users = len(stats)
+            if real_active_users < 1: real_active_users = 1
+        except:
+            real_active_users = 1 # 로컬 테스트 안전장치
+            
+        st.markdown(f"<h3 style='margin-top:23px; font-size:16px;'>💬 실시간 오픈방 <span style='font-size:12px; color:#81C995; font-weight:normal;'>🟢 실제 {real_active_users}명 루팡 중</span></h3>", unsafe_allow_html=True)
         
         if st.session_state["current_audit"] is not None:
             audit = st.session_state["current_audit"]
