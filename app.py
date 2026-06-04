@@ -5,7 +5,7 @@ import random
 
 # 1. 제미나이 검색 및 다크모드 환경에 최적화된 설정
 st.set_page_config(
-    page_title="✨ Gemini - 자산 최적화 시뮬레이션 v11", 
+    page_title="✨ Gemini - 자산 최적화 시뮬레이션 v12", 
     page_icon="✨",
     layout="centered" 
 )
@@ -67,6 +67,7 @@ else:
         "샌디스크/웨스턴디지털 (WDC)": {"current_price": 72, "yearly_prices": [72, 64, 42, 39, 52]} 
     }
 
+    # --- 제미나이 프롬프트 타이틀 디자인 ---
     st.markdown("""
         <div style="margin-bottom: 10px;">
             <span style="font-size: 32px; font-weight: 700; background: linear-gradient(45deg, #4285F4, #9B51E0, #E91E63); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
@@ -156,18 +157,18 @@ else:
         price_unit = "$" if is_foreign else "원"
         missed_money = final_value - total_seed
 
-        # 🧮 과거 N년 전 주가 대비 현재 주가의 순수 누적 상승률 계산 공식
+        # 🧮 [다이나믹 핵심 튜닝] N년 전 주가 대비 현재 주가의 순수 누적 상승률(배수) 계산
         max_idx = min(years, len(prices_history) - 1)
         then_price = prices_history[max_idx]
         total_asset_growth = ((current_price - then_price) / then_price) * 100
+        
+        # 🚀 [직진형 다이나믹 예측 공식] 
+        # 미래 {years}년 뒤 예측 잔고 = 현재 자산 가치 * (현재가 / N년전가)
+        # 과거 N년 동안 모아 도달한 현재 금액이, 미래 N년 동안 똑같은 원형 상승률 배수만큼 퀀텀 점프한다고 가정합니다.
+        growth_multiplier = current_price / then_price
+        future_value = final_value * growth_multiplier
 
-        # 미래 복리 예측 연산 (거치식 복리 스케일 매핑)
-        total_return_rate = final_value / total_seed if total_seed > 0 else 1.0
-        total_weeks = years * 52
-        weekly_growth_rate = (total_return_rate) ** (1 / total_weeks) - 1 if total_return_rate > 0 else 0.0
-        future_value = final_value * total_return_rate
-
-        # 🔍 0순위: 데이터 신뢰성 검증 리포트 (누적 상승률 정보 포함)
+        # 🔍 0순위: 데이터 신뢰성 검증 리포트
         st.write("---")
         st.markdown(f"<h3 style='color: #FFFFFF; font-size: 18px;'>🔍 0. 데이터 신뢰성 검증 리포트 ({target_asset.split(' (')[0]})</h3>", unsafe_allow_html=True)
         
@@ -179,7 +180,7 @@ else:
             display_now = f"{current_price:,} 원" if not is_foreign else f"${current_price:,} (원화 약 {int(current_price*exchange_rate):,} 원)"
             st.markdown(f"""
                 <div style="border: 1px solid #3C4043; padding: 15px; border-radius: 8px; background-color: #1A1D20;">
-                    <div style="font-size: 11px; color: #AAADB0;">✨ 2026년 현재 진짜 실시간 시세</div>
+                    <div style="font-size: 11px; color: #81C995;">✨ 2026년 현재 진짜 실시간 시세</div>
                     <div style="font-size: 18px; font-weight: 600; color: #81C995; margin-top: 5px;">{display_now}</div>
                     <div style="font-size: 11px; color: #FFFFFF; margin-top: 3px; font-weight: bold;">📊 {max_idx}년 간 순수 누적 수익률: {total_asset_growth:+.2f}%</div>
                 </div>
@@ -198,23 +199,29 @@ else:
             status_text = "🚨 기회상실 순손실액" if missed_money > 0 else "🛡️ 리스크 최종 방어액"
             st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: {card_color}; font-weight: 500;">{status_text}</div><div style="font-size: 22px; font-weight: 600; color: {card_color}; margin-top: 5px;">{"+" if missed_money > 0 else ""}{int(missed_money):,} 원</div></div>""", unsafe_allow_html=True)
 
-        # 미래 행복회로 예측 스코어보드
+        # 🔮 2층 미래 예측 스코어보드 (다이나믹 스케일 전면 개조)
         st.write("")
-        st.markdown(f"<h3 style='color: #FFFFFF; font-size: 18px;'>🔮 2. 미래 {years}년 뒤 자산 행복회로 예측</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color: #FFFFFF; font-size: 18px;'>🔮 2. 미래 {years}년 뒤 자산 행복회로 퀀텀점프 예측</h3>", unsafe_allow_html=True)
         
         fut_col1, fut_col2 = st.columns(2)
         with fut_col1:
-            st.markdown(f"""<div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;"><div style="font-size: 12px; color: #D6BCFA; font-weight: 500;">⚡ 과거 주봉 평균 상승률 (복리)</div><div style="font-size: 24px; font-weight: 600; color: #D6BCFA; margin-top: 5px;">{weekly_growth_rate*100:+.4f} % / 주</div></div>""", unsafe_allow_html=True)
+            st.markdown(f"""
+                <div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;">
+                    <div style="font-size: 12px; color: #D6BCFA; font-weight: 500;">🚀 미래 엔진에 투영된 과거 에너모멘텀</div>
+                    <div style="font-size: 24px; font-weight: 600; color: #D6BCFA; margin-top: 5px;">{total_asset_growth:+.2f} % 직진 반영</div>
+                    <div style="font-size: 11px; color: #AAADB0; margin-top: 2px;">(지난 {max_idx}년의 누적 수익률 스케일을 미래 {years}년에 1:1 대입)</div>
+                </div>
+            """, unsafe_allow_html=True)
         with fut_col2:
             st.markdown(f"""
                 <div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;">
-                    <div style="font-size: 12px; color: #FFD700; font-weight: 500;">💰 미래 {years}년 뒤 최종 잔고 예측</div>
+                    <div style="font-size: 12px; color: #FFD700; font-weight: 500;">💰 미래 {years}년 뒤 내 통장 최종 잔고 예측</div>
                     <div style="font-size: 24px; font-weight: 600; color: #FFD700; margin-top: 5px;">{int(future_value):,} 원</div>
-                    <div style="font-size: 11px; color: #FFFFFF; margin-top: 3px; font-weight: bold;">📊 적용된 미래 누적 기대수익률: {((future_value - final_value)/final_value)*100:+.2f}%</div>
+                    <div style="font-size: 11px; color: #AAADB0; margin-top: 2px;">(현재 평가금 {int(final_value):,}원이 과거 {max_idx}년처럼 한 번 더 복사될 경우)</div>
                 </div>
             """, unsafe_allow_html=True)
 
-        # 실물 자산 환산기 연산
+        # 실물 자산 환산기
         maratang_count = int(total_seed / 10000)
         dior_bag_count = round(total_seed / 9000000, 1)
         car_count = round(total_seed / 28000000, 1)
@@ -324,18 +331,18 @@ else:
             st.markdown(f"""
                 <div style="background: linear-gradient(135deg, #1A1B2F 0%, #16161D 100%); border: 1px solid #4A3E7D; padding: 22px; border-radius: 12px; color: #FFFFFF; line-height: 1.7; font-size: 14.5px;">
                     <span style="color: #F28B82; font-weight: bold; font-size: 16px;">⚠️ [손실 진단 및 예측] 장바구니에 스며든 무서운 스노우볼 효과</span><br><br>
-                    요청하신 데이터를 분석한 결과, 무심코 결제해 온 <b>'{habit_name}'</b> 비용이 <b>{target_asset}</b>의 폭발적인 주간 복리 성장세(주당 {weekly_growth_rate*100:+.3f}%)를 만나 잔인한 기회비용을 만들어냈습니다.<br><br>
-                    이미 지나간 {years}년 동안 날린 돈만 <b>{int(missed_money/10000):,}만 원</b>에 달하며, 이 돈이 만약 동일한 주봉 상승 탄력을 유지하며 미래 {years}년 동안 '복리'로 더 굴러간다면... 당신의 통장에는 무려 <b>{int(future_value/10000):,}만 원</b>이라는 거금이 찍혀 있게 됩니다.<br><br>
-                    강남 아파트 계약금이나 포르쉐 한 대 뽑을 수준의 미래 자산이 지금 스타벅스 컵과 마라탕 그릇, 지그재그 장바구니 속에서 살살 녹아내리고 있다는 뜻입니다. 미래의 자신에게 사죄하는 마음으로 오늘부터 즉시 충동 결제를 전면 중단할 것을 강력히 권고합니다.
+                    요청하신 데이터를 분석한 결과, 무심코 결제해 온 <b>'{habit_name}'</b> 비용이 <b>{target_asset}</b>의 폭발적인 과거 N년 순 누적 성장세(총 {total_asset_growth:+.2f}%)를 정통으로 얻어맞고 무시무시한 미래 폭탄을 만들어냈습니다.<br><br>
+                    이미 지나간 {years}년 동안 날린 돈만 <b>{int(missed_money/10000):,}만 원</b>에 달하며, 이 돈이 만약 과거의 미친 모멘텀을 100% 그대로 유지하며 미래 {years}년 동안 한 번 더 복사되어 달린다면... 당신의 통장에는 무려 <b>{int(future_value/10000):,}만 원</b>이라는 초거대 자산이 찍혀 있게 됩니다.<br><br>
+                    강남 아파트 등기나 포르쉐 한 대 뽑고 유유히 은퇴할 수준의 미래 기회비용이 지금 스타벅스 컵과 마라탕 그릇, 지그재그 장바구니 속에서 시원하게 녹아내리고 있다는 뜻입니다. 당장 결제 카드를 폐기하고 정신 차릴 것을 경고합니다.
                 </div>
             """, unsafe_allow_html=True)
         else:
             st.markdown(f"""
                 <div style="background: linear-gradient(135deg, #16261E 0%, #16161D 100%); border: 1px solid #2B543A; padding: 22px; border-radius: 12px; color: #FFFFFF; line-height: 1.7; font-size: 14.5px;">
-                    <span style="color: #81C995; font-weight: bold; font-size: 16px;">😎 [반전 정산] 파괴적 역복리를 피한 인류 최강의 생존 전략</span><br><br>
-                    축하합니다. 시뮬레이션 결과 귀하의 소비는 자산 폭락의 역복리 늪을 피해 간 '천재적인 리스크 관리'였음이 데이터로 입증되었습니다.<br><br>
-                    만약 {years}년 전에 눈물 흘려가며 참아낸 돈을 <b>{target_asset}</b>에 적립했다면, 주당 {weekly_growth_rate*100:.3f}%씩 계좌가 살살 녹아내리는 고문을 당했을 것입니다. 만약 이 파괴적인 하락세가 미래 {years}년 뒤까지 그대로 복리로 이어진다면, 당신의 자산은 반토막을 넘어 <b>{int(future_value/10000):,}만 원</b> 수준으로 처참하게 소멸할 예정이었습니다.<br><br>
-                    주식에 묶여서 증발할 뻔한 미래의 돈을 미리 끄집어내어 <b>'{habit_name}'</b>으로 알차게 도파민을 충전한 당신이 이 시대의 진정한 금융 승리자입니다. 앞으로도 상사가 킹받게 할 때는 주식 창을 켜는 대신 장바구니를 채우며 자산을 든든하게 방어하십시오.
+                    <span style="color: #81C995; font-weight: bold; font-size: 16px;">😎 [반전 정산] 파괴적 하락 역스노우볼을 피한 인류 최강의 생존 전략</span><br><br>
+                    축하합니다. 시뮬레이션 결과 귀하의 소비는 자산 폭락의 늪을 피한 '천재적인 리스크 관리 전략'이었음이 데이터로 입증되었습니다.<br><br>
+                    만약 {years}년 전에 눈물 흘려가며 참아낸 돈을 <b>{target_asset}</b>에 적립했다면, 과거의 처참한 하락 사이클({total_asset_growth:+.2f}%)에 정통으로 처맞고 계좌가 분해되는 고문을 당했을 것입니다. 만약 이 파괴적인 하락 에너지가 미래 {years}년 뒤까지 그대로 1:1 직진 적용된다면, 당신의 자산은 반토막을 넘어 <b>{int(future_value/10000):,}만 원</b> 수준으로 처참하게 증발할 예정이었습니다.<br><br>
+                    주식에 묶여서 증발할 뻔한 미래의 돈을 미리 끄집어내어 <b>'{habit_name}'</b>으로 알차게 도파민을 충전한 당신이 이 시대의 진정한 금융 승리자입니다. 앞으로도 소비 흐름을 아주 든든하게 유지하십시오.
                 </div>
             """, unsafe_allow_html=True)
 
