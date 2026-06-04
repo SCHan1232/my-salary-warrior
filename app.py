@@ -5,7 +5,7 @@ import random
 
 # 1. 껄무새 다크모드 기반 최적화 설정
 st.set_page_config(
-    page_title="✨ 껄무새 - 2030 필수 자산 케어 v30", 
+    page_title="✨ 껄무새 - 2030 필수 자산 케어 v31", 
     page_icon="🦜",
     layout="wide"
 )
@@ -31,7 +31,7 @@ js_panic_script = """
 components.html(js_panic_script, height=0, width=0)
 is_boss_mode = st.query_params.get("boss_mode", "false") == "true"
 
-# 🛠️ [🚨 에러 완치 솔루션] 구버전 딕셔너리 세션 데이터 충돌 강제 방어 및 리스트 포맷 스위칭 로직
+# 🛠️ 세션 데이터 포맷 스위칭 및 강제 방어 로직
 balance_games_pool = [
     {"question": "평생 배달 야식+스벅 끊고 엔비디아 풀매수 vs 고점 물린 삼전 원금 강제 회복", "A": 142, "B": 98},
     {"question": "매달 올영 구경 전면 금지 vs 테슬라 고점에 물려서 3년 강제 존버", "A": 85, "B": 132},
@@ -45,7 +45,6 @@ balance_games_pool = [
     {"question": "유럽 축구 유니폼 수집 금지 vs 엔비디아 숏(인버스) 상품에 저축 넣기", "A": 125, "B": 62}
 ]
 
-# 캐시 데이터 구조 검증 및 리셋
 if "vote_data" in st.session_state:
     if isinstance(st.session_state["vote_data"], dict):
         st.session_state["vote_data"] = balance_games_pool
@@ -55,7 +54,7 @@ else:
 if "chat_messages" not in st.session_state:
     st.session_state["chat_messages"] = [
         {"role": "user", "name": "익명루팡_724", "text": "마라탕이랑 스벅 끊었으면 이미 해외여행 비즈니스 탔음.. 😭"}, 
-        {"role": "user", "name": "서학개미_119", "text": "구글 모으는 게 인생 최고 개이득인듯 다들 미장 가라"},
+        {"role": "user", "name": "서학개미_119", "text": "하이닉스 미쳤다 진짜.. 예전에 왜 안 샀을까 껄껄"},
         {"role": "user", "name": "껄껄새_002", "text": "테슬라 3년 전에 샀어야 했는데 껄껄껄... 지금이라도 타?"}
     ]
 if "current_game_idx" not in st.session_state:
@@ -88,16 +87,16 @@ else:
         "유럽 축구 구단 감성 레플리카 유니폼 (1회 140,000원)": 140000
     }
 
+    # 🛠️ [데이터 대개조] 현재 시세와 N년 전 주식 단가의 정밀한 매칭 (액면분할 및 현실 반영)
+    # 리스트 구조: [현재 가격, 1년전, 2년전, 3년전, 4년전, 5년전]
     HISTORICAL_STOCK_DATA = {
-        "삼성전자 (005930.KS)": {"current_price": 358250, "yearly_prices": [358250, 285000, 72500, 71500, 66500]},
-        "SK하이닉스 (000660.KS)": {"current_price": 168000, "yearly_prices": [168000, 142000, 115000, 110300, 105000]},
-        "한미반도체 (042700.KS)": {"current_price": 142500, "yearly_prices": [142500, 118000, 61000, 29800, 13200]},
-        "삼성전기 (009150.KS)": {"current_price": 156500, "yearly_prices": [156500, 148000, 138000, 145200, 149000]},
-        "엔비디아 (NVDA)": {"current_price": 125, "yearly_prices": [125, 85, 48, 39, 18]}, 
-        "테슬라 (TSLA)": {"current_price": 178, "yearly_prices": [178, 210, 175, 214, 235]}, 
-        "구글 (GOOGL)": {"current_price": 174, "yearly_prices": [174, 150, 112, 124, 115]}, 
-        "마이크론 (MU)": {"current_price": 132, "yearly_prices": [132, 110, 68, 67, 71]}, 
-        "샌디스크/웨스턴디지털 (WDC)": {"current_price": 72, "yearly_prices": [72, 64, 42, 39, 52]} 
+        "SK하이닉스 (000660.KS)": {"current_price": 2345000, "yearly_prices": [2345000, 1850000, 1180000, 850000, 1250000, 820000]},
+        "삼성전자 (005930.KS)": {"current_price": 78500, "yearly_prices": [78500, 72000, 61000, 75000, 81000, 50000]},
+        "한미반도체 (042700.KS)": {"current_price": 142500, "yearly_prices": [142500, 118000, 61000, 15800, 13200, 9800]},
+        "엔비디아 (NVDA)": {"current_price": 125, "yearly_prices": [125, 85, 48, 16, 13, 5]}, # 액면분할 환산 반영
+        "테슬라 (TSLA)": {"current_price": 178, "yearly_prices": [178, 210, 175, 290, 235, 60]}, 
+        "구글 (GOOGL)": {"current_price": 174, "yearly_prices": [174, 150, 112, 124, 115, 68]}, 
+        "마이크론 (MU)": {"current_price": 132, "yearly_prices": [132, 110, 68, 55, 71, 42]}
     }
 
     # 헤더 섹션
@@ -186,7 +185,7 @@ else:
                     unit_price = HABIT_PRICE_DICT[selected_option]
                     
                     GGUL_TITLE_MAP = {
-                        "탕후루/마라탕 수명 단축 쿨타임": "마라탕 끊고 엔비디아 풀매수해서 건물 올렸을 '껄'",
+                        "탕후루/마라탕 수명 단축 쿨타임": "마라탕 끊고 하이닉스 풀매수해서 건물 올렸을 '껄'",
                         "스타벅스 바닐라라떼+디저트": "스벅 프리미엄 당수치 올릴 돈으로 건물주 됐을 '껄'",
                         "올리브영 세일 '구경만' 가기": "올영 올인할 시드로 시총 우량주 풀소유 해봤을 '껄'",
                         "불금 배달 떡볶이+치킨 세트": "야식 배달 라이더 팁 쏠 돈으로 배달 앱 주주 됐을 '껄'",
@@ -215,7 +214,7 @@ else:
                     total_shares += yearly_budget / past_price
                     
                 is_foreign = ".KS" not in target_asset
-                exchange_rate = 1500 if is_foreign else 1
+                exchange_rate = 1380 if is_foreign else 1 # 환율 보정
                 final_value = total_shares * current_price * exchange_rate
                 missed_money = final_value - total_seed
 
@@ -240,7 +239,7 @@ else:
                             card_info = {"title": "👑 자산 파괴계의 월드클래스 GOAT", "desc": f"걸어 다니는 인간 지표이자 자산 분쇄의 신이 우리 회사 사내망에 버젓이 상주하고 계셨군요.\n억 단위의 소중한 인생 시드를 오직 본인의 취향이 가득 담긴 '{habit_clean_name}' 지출 명목으로 자본주의 시장에 전부 헌납하셨습니다.\n덕분에 {asset_clean_name}의 진짜 주주들은 발 뻗고 편안하게 꿀잠을 잡니다. 눈물 닦고 9시 정각에 보고서나 올리세요."}
                     else:
                         custom_cards = {
-                            "탕후루/마라탕 수명 단축 쿨타임 (1회 18,000원)": {"title": "🩸 혈당 폭발 마라탕 중독자", "desc": "남들 반도체 지수 호황 누릴 때 혼자 붉은 고추기름 국물과 설탕 시럽 코팅에 영혼을 저당 잡힌 돼지 주주님.\n입안의 일시적인 사치와 위장 평수를 넓힌 대가로 통장 잔고의 미래 척추는 완벽하게 내려앉아 아작이 났습니다.\n미래에 포르쉐 핸들 대신 마라탕 숟가락 잡고 껄껄대고 있을 자신에게 조용히 소견서를 제출해 보세요."},
+                            "탕후루/마라탕 수명 단축 쿨타임 (1회 18,000원)": {"title": "🩸 혈당 폭발 마라탕 중독자", "desc": "남들 반도체 지수 호황 누릴 때 혼자 붉은 고추기름 국물과 설탕 시럽 코팅에 영혼을 저당 잡힌 돼지 주주님.\n입안의 일시적인 사치와 위장 평수를 넓힌 대가로 통장 잔고의 미래 척추는 완벽하게 내려앉아 아작이 났습니다.\n미래에 포르쉐 핸들 대신 마라탕 숟가락 잡고 껄껄대고 있을 자신에게 소견서를 제출해 보세요."},
                             "스타벅스 바닐라라떼+디저트 (1회 11,000원)": {"title": "☕ 사이렌 오더 명예 의장", "desc": "매달 스타벅스 프리미엄 별 사냥과 고농축 당류에 취해 살며 남의 나라 커피 기업 시총 방어에 본인 급여를 장렬히 갈아 넣으신 호구.\n본인 계좌는 영하권 한파 주의보가 내렸는데 아침마다 당당하게 닉네임 불리며 종이컵 받아오는 모습이 참 눈물겹습니다.\n그 컵홀더 탑처럼 모아두면 미래에 강남 아파트 전세 계약서로 바꿔 준답니까?"},
                             "올리브영 세일 '구경만' 가기 (1회 45,000원)": {"title": "💄 올영 시총 수호대 대장", "desc": "세일 알림 문자만 오면 눈이 뒤집혀서 '구경만 해야지' 하고 기어 들어가 장바구니 가득 팩과 틴트를 쟁여 나오는 뇌 빼놓은 영애.\n피부는 일시적으로 매끈해졌을지 몰라도, 귀하의 투자 포트폴리오는 알거지 상태로 굶주려 뼈만 남은 채 비명을 지르고 있습니다.\n미래에 화장품 바닥까지 다 긁어 바르고 거울 보며 서럽게 울고 계실 모습이 참으로 든든합니다."},
                             "불금 배달 떡볶이+치킨 세트 (1회 32,000원)": {"title": "🐔 배달 앱 다이아몬드 VVIP", "desc": "금요일 스트레스 핑계 대며 캡사이신과 기름진 닭 튀김으로 위장을 혹사하는 사이, 통장에 우량 자산이 꽂힐 기회는 야무지게 소화되어 사라졌습니다.\n라이더 영웅들에게 배달 팁 쾌척하며 자선사업 하시는 동안 귀하의 노후 자금은 완벽하게 멸망의 길로 직진했습니다.\n남은 치킨 무 국물이나 마시며 회사 모니터 앞에서 시원하게 껄껄 대십시오."},
@@ -298,7 +297,7 @@ else:
 </div>
 <div style="text-align: center; margin: 20px 0;">
 <span style="font-size: 13px; color: #AAADB0; display: block; margin-bottom: 8px;">📢 절망의 무한 루프 헤드라인</span>
-<h2 style="font-size: 18px; font-weight: 800; color: #FFFFFF; margin: 0; line-height: 1.4; word-break: keep-all;">"{ggul_title}"</h2>
+<h2 style="font-size: 17px; font-weight: 800; color: #FFFFFF; margin: 0; line-height: 1.4; word-break: keep-all;">"{ggul_title}"</h2>
 </div>
 <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 12px 15px; border-radius: 8px; margin-bottom: 10px;">
 <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
@@ -307,7 +306,7 @@ else:
 </div>
 <div style="display: flex; justify-content: space-between;">
 <span style="font-size: 11px; color: #81C995;">🔮 미래 예상 최종 자산</span>
-<span style="font-size: 13px; font-weight: bold; color: #81C995;">{int(future_value):,} 원</span>
+<span style="font-size: 13px; font-weight: bold; color: #81C995;">{int(final_value):,} 원</span>
 </div>
 </div>
 <div style="text-align: center; background: rgba(233,30,99,0.1); border: 1px solid rgba(233,30,99,0.3); padding: 8px; border-radius: 6px;">
@@ -327,7 +326,7 @@ else:
             st.caption(f"📅 오늘 날짜 기운({datetime.date.today().strftime('%Y년 %m월 %d일')})을 실시간 해체하여 당일 매수운을 매칭합니다.")
             
             user_birth = st.text_input("🎂 생년월일 8자리를 입력하세요", max_chars=8, placeholder="19961025", key="saju_birth")
-            stock_question = st.text_input("💬 오늘 진입할 주식 종목명", placeholder="예: 엔비디아", key="saju_stock")
+            stock_question = st.text_input("💬 오늘 진입할 주식 종목명", placeholder="예: SK하이닉스", key="saju_stock")
             
             if st.button("☯️ 오늘의 일진 대운 오픈"):
                 if len(user_birth) < 8 or not stock_question: st.error("🚨 생년월일 8자리와 종목명을 입력해야 점괘가 작동합니다!")
