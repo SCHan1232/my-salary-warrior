@@ -1,13 +1,12 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-# 1. 페이지 기본 설정 (와이드 모드 및 타이틀)
+# 1. 페이지 기본 설정
 st.set_page_config(
     page_title="업무 효율화 도구 (통계 분석 시스템)", layout="wide"
 )
 
-# 2. ⚡ [핵심] 부장님 감지 단축키 (Space바 연속 2번) 주입을 위한 자바스크립트
-# 스페이스바를 빠르게 두 번 누르면 Streamlit의 쿼리 파라미터를 변경하여 화면을 리프레시합니다.
+# 2. ⚡ 부장님 감지 단축키 (Space바 연속 2번) 자바스크립트 주입
 js_panic_script = """
 <script>
     let lastKeyTime = 0;
@@ -15,8 +14,7 @@ js_panic_script = """
         if (e.code === 'Space') {
             const currentTime = new Date().getTime();
             const keyGap = currentTime - lastKeyTime;
-            if (keyGap < 300) {  // 0.3초 이내에 스페이스바가 두 번 눌리면 작동
-                // Streamlit URL에 boss_mode=true를 강제로 주입하여 화면을 즉시 바꿈
+            if (keyGap < 300) {  
                 const url = new URL(window.parent.location.href);
                 url.searchParams.set('boss_mode', 'true');
                 window.parent.location.href = url.href;
@@ -26,16 +24,10 @@ js_panic_script = """
     });
 </script>
 """
-# 백엔드에 보이지 않는 유령 컴포넌트로 JS 스크립트 로드
 components.html(js_panic_script, height=0, width=0)
 
-# 3. URL 쿼리 파라미터를 읽어서 '부장님 모드(Boss Mode)' 상태인지 체크
-query_params = (
-    st.query_transform()
-    if hasattr(st, "query_transform")
-    else st.experimental_get_query_params()
-)
-is_boss_mode = query_params.get("boss_mode", ["false"])[0] == "true"
+# 3. 최신 Streamlit 규격에 맞춘 쿼리 파라미터 읽기 (에러 완벽 방지)
+is_boss_mode = st.query_params.get("boss_mode", "false") == "true"
 
 # -----------------------------------------------------------------------------
 # 🔴 AREA A: 부장님 모드 (진짜 일하는 척하는 ERP 화면)
@@ -47,7 +39,6 @@ if is_boss_mode:
     st.title("📊 2026년 상반기 전사 리소스 효율성 및 정량 지표 분석 보고서")
     st.caption("작성자: 디지털혁신본부 | 보안등급: 대외비 (Class A)")
 
-    # 일하는 느낌 물씬 나는 가짜 그래프와 지표 배치
     col1, col2, col3 = st.columns(3)
     col1.metric(
         label="전사 인프라 가동률 (Overall OEE)",
@@ -80,9 +71,9 @@ if is_boss_mode:
         use_container_width=True,
     )
 
-    # 다시 원래대로 돌아가는 복구 버튼 (몰래 누르는 버튼)
+    # 안전 구역 복구 버튼 수정
     if st.button("🔄 시스템 세션 재연결 (안전 구역으로 돌아가기)"):
-        st.experimental_set_query_params(boss_mode="false")
+        st.query_params["boss_mode"] = "false"
         st.rerun()
 
 # -----------------------------------------------------------------------------
@@ -99,7 +90,6 @@ else:
 
     st.write("---")
 
-    # 껄무새 시뮬레이터 폼
     with st.form("ggul_form"):
         col1, col2 = st.columns(2)
         with col1:
@@ -126,7 +116,6 @@ else:
         submitted = st.form_submit_with_button("🚀 타임머신 가동 및 정산하기")
 
     if submitted:
-        # 가상의 정산 로직 (실제 엔진과 연동 가능)
         multiplier = {
             "엔비디아 (NVDA)": 12.5,
             "테슬라 (TSLA)": 0.8,
@@ -142,7 +131,6 @@ else:
 
         st.success("🤖 타임머신 분석이 완료되었습니다!")
 
-        # 결과 브리핑
         m_col1, m_col2 = st.columns(2)
         m_col1.metric(label="현재 내 통장 잔고여야 했을 금액", value=f"{int(final_asset):,} 만원")
         m_col2.metric(
@@ -151,7 +139,6 @@ else:
             delta=f"{int(rate*100)}%",
         )
 
-        # 껄무새 감성 멘트 출력
         if profit > 0:
             st.warning(
                 f"🦜 껄... 껄... 그때 {asset}에 대가리 깨져도 박았어야 했는데... 당신은 지금 회사에서 부장님 눈치를 보는 대신 한강 뷰 아파트에서 샴페인을 터뜨리고 있었을 것입니다."
