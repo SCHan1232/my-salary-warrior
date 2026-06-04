@@ -2,14 +2,14 @@ import streamlit as st
 import streamlit.components.v1 as components
 import datetime
 
-# 1. 아웃룩/지메일 감성의 화이트 오피스 테마 페이지 설정
+# 1. 노션 특유의 미니멀하고 깔끔한 화이트 테마 기반 설정
 st.set_page_config(
-    page_title="Microsoft Outlook - 받은 메일함", 
-    page_icon="📩",
-    layout="wide"
+    page_title="💰 [Notion] 2026 자산 최적화 프로젝트", 
+    page_icon="📝",
+    layout="centered" # 노션처럼 가운데로 깔끔하게 모이도록 설정
 )
 
-# 2. ⚡ 부장님 감지 패닉 버튼 (스페이스바 연타 시 진짜 엑셀 데이터 시트로 도망)
+# 2. ⚡ 부장님 감지 패닉 버튼 (스페이스바 연타 시 사내 ERP 데이터 시트로 대피)
 js_panic_script = """
 <script>
     let lastKeyTime = 0;
@@ -32,20 +32,20 @@ is_boss_mode = st.query_params.get("boss_mode", "false") == "true"
 
 # 🔴 AREA A: 진짜 대외비 업무 데이터 화면 (부장님 방어막)
 if is_boss_mode:
-    st.error("🔒 [보안 네트워크] 本 화면은 사내 인트라넷 자산입니다. 외부 유출을 금합니다.")
-    st.title("📊 2026년 전사 인프라 리소스 최적화 정량 지표 데이터셋")
+    st.error("🔒 [보안] 本 화면은 사내 인트라넷 자산입니다. 외부 유출을 금합니다.")
+    st.title("📊 2026_전사_리소스_최적화_KPI_Data")
     st.dataframe({
-        "부서코드": ["DE-01", "DE-02", "MK-04", "HR-02"],
-        "프로젝트명": ["Next-Gen ERP", "Data Pipeline v3", "Global Viral", "OKR Auto"],
-        "가동률": ["94.2%", "81.2%", "45.0%", "100.0%"]
+        "Index": [1, 2, 3],
+        "Task": ["Next-Gen ERP 구축", "Data Pipeline v3 안정화", "Core Sandbox 기획"],
+        "Progress": ["94.2%", "81.2%", "45.0%"]
     }, use_container_width=True)
-    if st.button("🔄 메일 시스템 세션 재연결"):
+    if st.button("🔄 Notion 세션 새로고침"):
         st.query_params["boss_mode"] = "false"
         st.rerun()
 
-# 🟢 AREA B: 메일 창으로 위장한 껄무새 계산기
+# 🟢 AREA B: 노션 페이지로 완벽 위장한 껄무새 계산기
 else:
-    # 📊 고정 과거 데이터베이스 (v5 로직 계승)
+    # 📊 고정 과거 데이터베이스 (실제 2026년 시세 반영)
     HISTORICAL_STOCK_DATA = {
         "삼성전자 (005930.KS)": {"current_price": 358250, "yearly_prices": [358250, 285000, 72500, 63100, 75500]},
         "SK하이닉스 (000660.KS)": {"current_price": 168000, "yearly_prices": [168000, 142000, 115000, 92000, 121000]},
@@ -53,42 +53,46 @@ else:
         "비트코인 (BTC-USD)": {"current_price": 68000, "yearly_prices": [68000, 52000, 28000, 39000, 46000]}
     }
 
-    # --- UI 상단 오피스 네비게이션 바 연출 ---
+    # --- 노션 특유의 상단 엠블럼 & 타이틀 UI 연출 ---
     st.markdown("""
-        <div style="background-color: #0078d4; padding: 12px; border-radius: 5px; margin-bottom: 20px;">
-            <h3 style="color: white; margin: 0; font-family: sans-serif;">✉️ Outlook Web Mail - 인트라넷 시스템</h3>
+        <div style="font-size: 75px; margin-bottom: 5px;">🦜</div>
+        <h1 style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'; font-weight: 700; color: #37352f; margin-top: 0; margin-bottom: 8px;">
+            [개인] 일상 매몰비용의 자산 전환 시뮬레이터
+        </h1>
+        <div style="color: rgba(55, 53, 47, 0.6); font-size: 14px; margin-bottom: 20px;">
+            <span>📁 개인 아카이브</span> • <span>👤 schan1232</span> • <span>📅 최종 수정일: 2026년 6월 4일</span>
         </div>
     """, unsafe_allow_html=True)
 
-    # --- 좌측 사이드바: 메일함 메뉴 구성 ---
-    with st.sidebar:
-        st.markdown("### 📁 폴더 바로가기")
-        st.write("📥 **받은메일함 (3)**")
-        st.text("📤 보낸메일함")
-        st.text("📝 임시보관함 (12)")
-        st.text("🗑️ 지운메일함")
-        st.write("---")
-        st.info("💡 **[긴급 보안]** 부장님이 다가오면 언제든 **[스페이스바 2번]** 연타하세요. 즉시 대외비 서버 데이터 화면으로 전환됩니다.")
+    # 노션의 Callout(콜아웃) 박스 스타일 구현
+    st.markdown("""
+        <div style="background-color: #f1f1ef; padding: 16px; border-radius: 4px; display: flex; gap: 12px; margin-bottom: 25px;">
+            <div style="font-size: 20px;">💡</div>
+            <div style="color: #37352f; font-size: 14px; line-height: 1.5;">
+                <b>안내 및 보안 지침</b><br>
+                본 페이지는 일상적인 고정 지출(담배, 커피 등)을 특정 자산에 적립식으로 투자했을 때의 실제 과거 주가 추이 기반 가치를 실시간으로 역산합니다.<br>
+                <span style="color: #eb5757; font-weight: bold;">[🚨 월급루팡 전용 가드]</span> 뒤에 부장님이 접근 시 <b>[스페이스바 연속 2번]</b>을 누르면 즉시 사내 ERP 데이터셋으로 화면이 강제 전환됩니다.
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
 
-    # --- 중앙 화면: 메일 리스트 및 입력창 설계 ---
-    st.markdown("### 📥 받은메일함 (최근 보관 파일)")
+    st.markdown("### ⚙️ 1. 데이터 추출 조건 설정")
     
-    with st.form("mail_form"):
-        st.markdown("⚠️ **시스템 안내:** 개인 자산 진단 및 지출 패턴 메일 보고서를 생성하려면 아래 옵션을 선택 후 조회하십시오.")
-        
+    # 노션 서식처럼 깔끔하게 정돈된 입력 양식
+    with st.form("notion_form"):
         col1, col2 = st.columns(2)
         with col1:
-            habit = st.selectbox("📌 [발신인: 재무기획팀] 지출성 경비 분류", ["담배 (1갑 4,500원)", "스타벅스 아메리카노 (1잔 4,500원)", "배달음식 (1회 22,000원)"])
-            count = st.slider("📊 [빈도 체크] 주간 평균 소비 횟수", 1, 14, 5)
+            habit = st.selectbox("🛍️ 소비성 경비 항목 선택", ["담배 (1갑 4,500원)", "스타벅스 아메리카노 (1잔 4,500원)", "배달음식 (1회 22,000원)"])
+            count = st.slider("📊 주간 평균 소비 빈도 (회/갑)", 1, 14, 5)
         with col2:
-            target_asset = st.selectbox("📈 [대체 자산] 연동할 목적 투자 종목", ["삼성전자 (005930.KS)", "SK하이닉스 (000660.KS)", "엔비디아 (NVDA)", "비트코인 (BTC-USD)"])
-            years = st.slider("⏳ [기간 설정] 데이터 추적 연한 (년)", 1, 5, 3)
+            target_asset = st.selectbox("📈 연동 대상 주식/자산", ["삼성전자 (005930.KS)", "SK하이닉스 (000660.KS)", "엔비디아 (NVDA)", "비트코인 (BTC-USD)"])
+            years = st.slider("⏳ 타임머신 추적 기간 (개년)", 1, 5, 3)
             
-        submitted = st.form_submit_button("📬 메일 본문 읽기 (컴파일)")
+        submitted = st.form_submit_button("🔗 변경 데이터 반영하기 (Enter)")
 
-    # --- 메일 본문 (정산 결과) 연출 ---
+    # --- 데이터 연산 및 노션식 결과 출력 ---
     if submitted:
-        # 계산 로직 (v5 완벽 계승)
+        # 1. 시뮬레이션 연산 로직 (v5 완벽 계승)
         unit_price = 4500 if habit != "배달음식 (1회 22,000원)" else 22000
         weekly_expense = unit_price * count
         yearly_budget = weekly_expense * 52
@@ -109,40 +113,51 @@ else:
         price_unit = "$" if is_foreign else "원"
         missed_money = final_value - total_seed
 
-        # 📨 지메일/아웃룩 본문 스타일로 결과 화면 꾸미기
-        st.write("---")
-        st.markdown(f"""
-            <div style="background-color: #f3f2f1; padding: 20px; border-left: 5px solid #0078d4; border-radius: 4px;">
-                <p style="margin: 0; color: #605e5c;"><b>발신인:</b> 재무관리본부 리스크관리팀 (audit@company.com)</p>
-                <p style="margin: 5px 0; color: #605e5c;"><b>수신인:</b> 사내 임직원 귀하</p>
-                <p style="margin: 5px 0; color: #201f1e;"><b>제목:</b> 📢 [엄중 경고] 귀하가 {years}년간 버린 지출에 대한 리스크 실시간 감사 결과보고</p>
-                <hr style="border-top: 1px solid #edebe9;">
-                <p style="color: #323130; line-height: 1.6;">
-                    본 메일은 사내 임직원의 일상 소비 자금(담배/커피/배달)을 <b>{target_asset}</b> 자산으로 대체 적립했을 경우의 시뮬레이션 가치를 실시간으로 진단한 결과 문서입니다.
-                </p>
-            </div>
-        """, unsafe_allow_html=True)
-        
         st.write("")
+        st.markdown("### 📊 2. 실시간 연산 결과 테이블")
         
-        # 메일 첨부파일 표 형태의 계정 스코어보드
+        # 노션의 보드(Board) 뷰 혹은 데이터베이스 요약 카드 스타일로 연출
         res_col1, res_col2, res_col3 = st.columns(3)
         with res_col1:
-            st.metric(label="📁 누적 손실 원금 (매몰 비용)", value=f"{int(total_seed):,} 원")
+            st.markdown(f"""
+                <div style="border: 1px solid #e9e9e6; padding: 15px; border-radius: 4px; background: #fff;">
+                    <div style="font-size: 12px; color: #7c7b77; font-weight: 500;">🪙 길바닥 매몰 원금</div>
+                    <div style="font-size: 22px; font-weight: 600; color: #37352f; margin-top: 5px;">{int(total_seed):,} 원</div>
+                </div>
+            """, unsafe_allow_html=True)
         with res_col2:
-            st.metric(label="📈 미매수 주식 평가 금액 (현재가 기준)", value=f"{int(final_value):,} 원", delta=f"{round(total_shares, 2)} 주 보유 분")
+            st.markdown(f"""
+                <div style="border: 1px solid #e9e9e6; padding: 15px; border-radius: 4px; background: #fff;">
+                    <div style="font-size: 12px; color: #238356; font-weight: 500;">📈 현재 자산 가치</div>
+                    <div style="font-size: 22px; font-weight: 600; color: #238356; margin-top: 5px;">{int(final_value):,} 원</div>
+                    <div style="font-size: 11px; color: #7c7b77; margin-top: 2px;">(시세: {current_price:,}{price_unit} / {round(total_shares,2)}주)</div>
+                </div>
+            """, unsafe_allow_html=True)
         with res_col3:
-            if missed_money > 0:
-                st.metric(label="🚨 기회비용 최종 손실액", value=f"- {int(missed_money):,} 원", delta="기회 상실", delta_color="inverse")
-            else:
-                st.metric(label="🛡️ 리스크 방어 이득액", value=f"+ {int(abs(missed_money)):,} 원", delta="손실 방어")
+            card_color = "#d4402a" if missed_money > 0 else "#2563eb"
+            status_text = "🚨 놓친 기회비용" if missed_money > 0 else "🛡️ 방어한 자산"
+            st.markdown(f"""
+                <div style="border: 1px solid #e9e9e6; padding: 15px; border-radius: 4px; background: #fff;">
+                    <div style="font-size: 12px; color: {card_color}; font-weight: 500;">{status_text}</div>
+                    <div style="font-size: 22px; font-weight: 600; color: {card_color}; margin-top: 5px;">{"+" if missed_money > 0 else ""}{int(missed_money):,} 원</div>
+                </div>
+            """, unsafe_allow_html=True)
 
-        # 메일 하단 껄무새 감사평 (말투를 약간 직장 선배 톤으로 위장하되 팩폭 유지)
-        st.write("---")
-        st.markdown("### 📋 감사실 종합 의견")
+        # 노션의 인용구 블록(>)을 활용한 껄무새 팩폭 코멘트
+        st.write("")
+        st.markdown("### 💬 3. 데이터 분석 총평")
+        
         if missed_money > 0:
-            st.warning(f"**[종합 의견: 심각]**")
-            st.markdown(f"귀하가 매주 {count}회씩 영혼 없이 소비한 자금을 **{target_asset}**에 적립식으로 던졌다면, 금일 기준 손에 쥘 수 있었던 순수 초과 수익만 **{int(missed_money/10000):,}만 원**에 달합니다. 감사실 판단하에 귀하는 지금 회사에서 부장님 눈치를 보는 대신 한강 뷰 아파트에서 연봉 협상을 하고 있었어야 마땅합니다. 조속히 지출 구조를 개혁하십시오.")
+            st.markdown(f"""
+                <blockquote>
+                    <b>🚨 [경고] 자산 파괴적 지출 패턴 감지됨</b><br>
+                    과거 실제 차트 데이터를 매핑해 본 결과, 당신이 {years}년 동안 매주 {count}번씩 주둥이에 털어 넣은 돈을 <b>{target_asset}</b>에 적립했다면 오늘 날짜 기준으로 순수하게 더 벌 수 있었던 기회비용만 <b>{int(missed_money/10000):,}만 원</b>입니다. 이 돈이면 지금 회사에서 상사 눈치 보며 노션 켜놓는 대신 하와이 해변에서 칵테일 마시고 있었습니다. 당장 지출 관리 페이지를 생성하십시오.
+                </blockquote>
+            """, unsafe_allow_html=True)
         else:
-            st.success(f"**[종합 의견: 양호]**")
-            st.markdown(f"리스크 관리팀 추적 결과, 해당 기간 **{target_asset}** 시장 수익률이 처참하여 주식을 샀다면 오히려 원금을 까먹고 -{int(abs(missed_money/10000)):,}만 원의 자산 손실을 입었을 것으로 판단됩니다. 담배와 스타벅스를 맛있게 흡입하여 사내 스트레스를 방어한 귀하의 행동은 결과적으로 '인생 최고의 재테크 헷지'였음을 인정합니다. 현상 유지를 권장합니다.")
+            st.markdown(f"""
+                <blockquote>
+                    <b>😎 [양호] 합리적인 니코틴/카페인 소비 입증됨</b><br>
+                    리스크 데이터 시뮬레이션 결과, 해당 기간 <b>{target_asset}</b>의 시장 성과가 매우 저조하여 주식을 샀다면 오히려 -{int(abs(missed_money/10000)):,}만 원의 원금 손실을 입었을 것입니다. 귀하가 담배와 커피를 맛있게 흡입하여 업무 스트레스를 방어한 것은 결과적으로 자산 손실을 완벽하게 헷지(Hedge)한 천재적인 재테크였습니다. 계속해서 맛있게 소비하십시오.
+                </blockquote>
+            """, unsafe_allow_html=True)
