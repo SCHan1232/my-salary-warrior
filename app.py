@@ -113,7 +113,7 @@ else:
             )
             leverage = st.checkbox("신용 대출 / 레버리지 영끌 포함 (위험도 200%)")
 
-        submitted = st.form_submit_with_button("🚀 타임머신 가동 및 정산하기")
+        submitted = st.form_submit_button("🚀 타임머신 가동 및 정산하기")
 
     if submitted:
         multiplier = {
