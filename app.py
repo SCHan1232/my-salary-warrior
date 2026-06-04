@@ -5,9 +5,9 @@ import random
 
 # 1. 껄무새 다크모드 기반 최적화 설정
 st.set_page_config(
-    page_title="✨ 껄무새 - 2030 필수 자산 케어 v23", 
+    page_title="✨ 껄무새 - 2030 필수 자산 케어 v24", 
     page_icon="🦜",
-    layout="wide"  # 우측 채팅방 배치를 위해 와이드 레이아웃으로 변경!
+    layout="wide"  # 와이드 레이아웃 유지
 )
 
 # 2. ⚡ 부장님 감지 패닉 버튼
@@ -50,7 +50,7 @@ if is_boss_mode:
     st.dataframe({"Index": [1, 2], "Task": ["Next-Gen ERP 구축", "Data Pipeline v3"], "Progress": ["94.2%", "81.2%"]}, use_container_width=True)
     if st.button("🔄 시스템 세션 새로고침"): st.query_params["boss_mode"] = "false"; st.rerun()
 
-# 🟢 AREA B: 껄무새 놀이터 (좌우 화면 분할 구조 혁신)
+# 🟢 AREA B: 껄무새 놀이터
 else:
     # 📊 데이터베이스
     HABIT_PRICE_DICT = {
@@ -88,10 +88,10 @@ else:
         </div>
     """, unsafe_allow_html=True)
 
-    # 🛠️ 핵심 레이아웃 분할: 왼쪽 메인 기능(65%) / 오른쪽 실시간 고정 대화방(35%)
-    main_layout, chat_layout = st.columns([1.8, 1.0], gap="large")
+    # 🛠️ [레이아웃 비율 초슬림 조정] 2.5대 0.8 구조로 대화방을 훨씬 작고 컴팩트하게 수정!
+    main_layout, chat_layout = st.columns([2.5, 0.8], gap="medium")
 
-    # ==================== [LEFT SIDE] 메인 탭 콘텐츠 랙 ====================
+    # ==================== [LEFT SIDE] 메인 기능 영역 ====================
     with main_layout:
         tab1, tab2, tab3 = st.tabs(["📊 자산 타임머신", "🔮 껄무새 사주도사", "⚔️ 주주총회 밸런스"])
 
@@ -168,7 +168,7 @@ else:
                             "스타벅스 바닐라라떼+디저트 (1회 11,000원)": {"title": "☕ 사이렌 오더 기부 천사", "desc": "매달 스타벅스 별사냥과 고카페인 시럽에 취해 살며 스타벅스 코리아 매출 상승에는 기여했으나 정작 본인 계좌는 공황 상태에 빠뜨린 주주"},
                             "올리브영 세일 '구경만' 가기 (1회 45,000원)": {"title": "💄 올리브영 탕진 잼 마스터", "desc": "세일 문자만 오면 '구경만 해야지' 하고 들어가 틴트와 팩으로 바구니를 채우며 CJ 올리브영 시총 방어에 본인 시드를 갈아 넣은 VVIP 흑우"},
                             "불금 배달 엽떡+치킨 세트 (1회 32,000원)": {"title": "🐔 배달 앱 다이아몬드 등급", "desc": "금요일 밤의 고독과 스트레스를 캡사이신과 튀김 옷으로 위로하느라, 통장에 억 단위 자산이 쌓일 기회를 아주 야무지게 씹어 삼키신 야식 마스터"},
-                            "지그재그/W컨셉 충동 의류 매수 (1회 65,000원)": {"title": "👗 새벽 배송 폰결제 야수", "desc": "침대에 누워 흐린 눈으로 옷 구경하다 네이버페이 6자리를 광속으로 태우며, 방구석 드레스룸은 채웠으나 자산 포트폴리오는 전라로 만든 패셔니스타"},
+                            "지그재그/W컨셉 충동 의류 매수 (1회 65,000원)": {"title": "👗 새벽 배송 폰결제 야수", "desc": "침대에 누워 흐린 눈으로 옷 구경하다 네이버페 6자리를 광속으로 태우며, 방구석 드레스룸은 채웠으나 자산 포트폴리오는 전라로 만든 패셔니스타"},
                             "매달 속눈썹 펌/네일 정기권 (1회 55,000원)": {"title": "💅 손끝 발끝 풀소유 영애", "desc": "손톱 위에 파츠를 올리고 눈썹을 바짝 끌어올려 비주얼 품격은 유지했으나, 정작 본인 자산 성장률은 바닥에 바짝 붙여버린 관리의 대가"}
                         }
                         card_info = custom_cards.get(selected_option, {"title": "🛍️ 프로 탕진러", "desc": "지출로 도파민을 채우며 우량주 투자 타이밍을 놓치신 직장인 명예 주주"})
@@ -183,7 +183,7 @@ else:
                     "grade": card_info["title"]
                 }
 
-                # 데이터 출력부 (순서 조정)
+                # 데이터 출력부
                 st.write("---")
                 st.markdown(f"<h3 style='color: #FFFFFF; font-size: 17px;'>🔍 0. 데이터 신뢰성 검증 리포트</h3>", unsafe_allow_html=True)
                 val_col1, val_col2 = st.columns(2)
@@ -197,12 +197,12 @@ else:
                 st.write("")
                 st.markdown("<h3 style='color: #FFFFFF; font-size: 17px;'>📊 1. 과거 데이터 기반 세부 실시간 정산</h3>", unsafe_allow_html=True)
                 res_col1, res_col2, res_col3 = st.columns(3)
-                with res_col1: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: #AAADB0; font-weight: 500;">🪙 총 지출 매몰 원금</div><div style="font-size: 21px; font-weight: 600; color: #FFFFFF; margin-top: 5px;">{int(total_seed):,} 원</div></div>""", unsafe_allow_html=True)
-                with res_col2: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: #81C995; font-weight: 500;">📈 현재 자산 가치 (오늘)</div><div style="font-size: 21px; font-weight: 600; color: #81C995; margin-top: 5px;">{int(final_value):,} 원</div></div>""", unsafe_allow_html=True)
+                with res_col1: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 11px; color: #AAADB0; font-weight: 500;">🪙 총 지출 매몰 원금</div><div style="font-size: 21px; font-weight: 600; color: #FFFFFF; margin-top: 5px;">{int(total_seed):,} 원</div></div>""", unsafe_allow_html=True)
+                with res_col2: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 11px; color: #81C995; font-weight: 500;">📈 현재 자산 가치 (오늘)</div><div style="font-size: 21px; font-weight: 600; color: #81C995; margin-top: 5px;">{int(final_value):,} 원</div></div>""", unsafe_allow_html=True)
                 with res_col3:
                     card_color = "#F28B82" if missed_money > 0 else "#8AB4F8"
                     status_text = "🚨 기회상실 순손실액" if missed_money > 0 else "🛡️ 리스크 최종 방어액"
-                    st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: {card_color}; font-weight: 500;">{status_text}</div><div style="font-size: 21px; font-weight: 600; color: {card_color}; margin-top: 5px;">{"+" if missed_money > 0 else ""}{int(missed_money):,} 원</div></div>""", unsafe_allow_html=True)
+                    st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 11px; color: {card_color}; font-weight: 500;">{status_text}</div><div style="font-size: 21px; font-weight: 600; color: {card_color}; margin-top: 5px;">{"+" if missed_money > 0 else ""}{int(missed_money):,} 원</div></div>""", unsafe_allow_html=True)
 
                 st.write("")
                 st.markdown(f"<h3 style='color: #FFFFFF; font-size: 17px;'>🔮 2. 미래 {years}년 뒤 자산 행복회로 퀀텀점프 예측</h3>", unsafe_allow_html=True)
@@ -246,7 +246,7 @@ else:
         # TAB 3: 밸런스 게임
         with tab3:
             st.markdown("### ⚔️ 주주총회 자산 파괴 밸런스 게임")
-            st.write("**Q. 평생 동안 다음 중 딱 하나의 지옥 밸런스만 선택해야 한다면?**")
+            st.write("**Q. 평생 동안 다음 중 딱 하나의 상황만 선택해야 한다면?**")
             col_v1, col_v2 = st.columns(2)
             with col_v1:
                 if st.button("🅰️ 평생 배달 야식+스타벅스 완전히 끊고, 그 돈 전액 엔비디아 적립식 풀매수", key="v_a"): st.session_state["vote_data"]["A"] += 1; st.rerun()
@@ -257,34 +257,33 @@ else:
             st.progress(int(per_A))
             st.caption(f"📊 주주 배틀 현황: 🅰️ {per_A:.1f}% vs 🅱️ {100-per_A:.1f}% (총 {total_votes}명 의결권 행사)")
 
-    # ==================== [RIGHT SIDE] 실시간 우측 고정 대화방 ====================
+    # ==================== 🛠️ [RIGHT SIDE] 초슬림&컴팩트 미니 대화방 위젯 ====================
     with chat_layout:
-        st.markdown("<h3 style='margin-top:23px; font-size:18px;'>💬 껄무새 실시간 대화방</h3>", unsafe_allow_html=True)
-        st.caption("어느 탭에 있든 실시간으로 실시간 한탄이 공유됩니다.")
+        st.markdown("<h3 style='margin-top:23px; font-size:16px;'>💬 실시간 오픈방</h3>", unsafe_allow_html=True)
         
-        # 👑 흑우 등급 실시간 대화방 인증 연동 모듈
+        # 👑 등급 인증 연동 모듈 크기도 작게 압축
         if st.session_state["current_audit"] is not None:
             audit = st.session_state["current_audit"]
-            st.info(f"🏅 최근 정산 등급: **{audit['grade']}**")
-            if st.button("👑 이 등급 대화방에 실시간 박제하기", use_container_width=True):
-                cert_text = f"🚨 [흑우인증] 내 탕진: '{audit['habit']}' ➡️ 만약 '{audit['asset']}' 적립했으면 미래 잔고 **{audit['future_val']}** 뚫었음; 등급은 [{audit['grade']}] 뜸 ㅠㅠ"
+            st.caption(f"🏅 **내 등급:** {audit['grade']}")
+            if st.button("👑 내 등급 바로 인증", use_container_width=True):
+                cert_text = f"🚨 [흑우인증] 탕진: '{audit['habit']}' ➡️ '{audit['asset']}' 에 박았으면 미래 잔고 **{audit['future_val']}** 뚫었음; 등급: [{audit['grade']}]"
                 st.session_state["chat_messages"].append({"role": "user", "name": f"인증러_{random.randint(100,999)}", "text": cert_text})
                 st.session_state["current_audit"] = None
-                st.toast("✅ 대화방에 흑우 등급 박제 성공!", icon="🔥")
+                st.toast("✅ 인증 완료!", icon="🔥")
                 st.rerun()
 
-        # 고정 레이아웃 메신저 피드 생성
-        chat_container = st.container(height=550)  # 우측에서 길게 보일 수 있도록 높이 550으로 상향 확장!
+        # 대화 피드 높이도 550 ➡️ 450으로 콤팩트하게 줄여서 우측 사이드에 귀엽게 밀착!
+        chat_container = st.container(height=450)
         with chat_container:
             for msg in st.session_state["chat_messages"]:
                 is_cert = "[흑우인증]" in msg["text"]
                 avatar_icon = "👑" if is_cert else "🦜"
                 with st.chat_message(msg["role"], avatar=avatar_icon):
                     st.markdown(f"**{msg['name']}**")
-                    if is_cert: st.info(msg["text"])
+                    if is_cert: st.caption(msg["text"]) # 인증 메시지도 슬림하게 캡션 처리
                     else: st.write(msg["text"])
 
-        # 우측 하단 고정형 대화방 입력 폼
-        if user_live_input := st.chat_input("우측 고정방에 익명으로 한탄하기..."):
-            st.session_state["chat_messages"].append({"role": "user", "name": f"익명루팡_{random.randint(100,999)}", "text": user_live_input})
+        # 입력 창
+        if user_live_input := st.chat_input("한탄하기..."):
+            st.session_state["chat_messages"].append({"role": "user", "name": f"익명_{random.randint(100,999)}", "text": user_live_input})
             st.rerun()
