@@ -267,7 +267,7 @@ else:
                 else:
                     card_info = {"title": "🛡️ 자산 수호 헷지 명인", "desc": "폭락 사이클을 영리한 탕진 소비로 우회 방어해 낸 금융 위기관리의 천재", "bg": "linear-gradient(135deg, #1B4D3E 0%, #1A1D20 100%)"}
                 
-                st.markdown(f"""<div style="background: {card_info['bg']}; border: 1px dashed rgba(255,255,255,0.2); padding: 20px; border-radius: 12px; text-align: center; color: #FFFFFF; font-size: 13.5px; max-width: 440px; margin: 15px auto;"><b>🏅 흑우 판정 등급: {card_info['title']}</b><br><span style='color: #E8EAED; font-size:12.5px;'>{card_info['desc']}</span></div>""", unsafe_allow_html=True)
+                st.markdown(f"""<div style="background: {card_info['bg']}; border: 1px solid #3C4043; padding: 20px; border-radius: 12px; text-align: center; color: #FFFFFF; font-size: 13.5px; max-width: 440px; margin: 15px auto;"><b>🏅 흑우 판정 등급: {card_info['title']}</b><br><span style='color: #E8EAED; font-size:12.5px;'>{card_info['desc']}</span></div>""", unsafe_allow_html=True)
 
         # TAB 2: 사주 운세
         with tab2:
