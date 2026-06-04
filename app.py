@@ -5,7 +5,7 @@ import random
 
 # 1. 껄무새 다크모드 기반 최적화 설정
 st.set_page_config(
-    page_title="✨ 껄무새 - 2030 필수 자산 케어 v17", 
+    page_title="✨ 껄무새 - 2030 필수 자산 케어 v18", 
     page_icon="🦜",
     layout="centered" 
 )
@@ -140,9 +140,59 @@ else:
                 display_now = f"{current_price:,} 원" if not is_foreign else f"${current_price:,} (원화 약 {int(current_price*exchange_rate):,} 원)"
                 st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 15px; border-radius: 8px; background-color: #1A1D20;"><div style="font-size: 11px; color: #81C995;">✨ 현재 실시간 시세</div><div style="font-size: 17px; font-weight: 600; color: #81C995; margin-top: 5px;">{display_now}</div><div style="font-size: 11px; color: #FFFFFF; margin-top: 3px; font-weight: bold;">📊 {max_idx}년 간 순수 누적 수익률: {total_asset_growth:+.2f}%</div></div>""", unsafe_allow_html=True)
 
-            # 1. 과거 데이터 기반 실시간 정산
+            # 🛠️ [리팩토링] 1. 인스타 스토리 전용 올인원 캡처 팩 (오류 유발 구문 완전 삭제 및 등급 통합)
+            st.write("---")
+            st.markdown("### 📸 1. 인스타 스토리 박제용 캡처 카드 (여기만 스크린샷 하세요!)")
+            
+            habit_clean_name = habit.split(" (")[0]
+            asset_clean_name = target_asset.split(" (")[0]
+
+            # 등급 데이터 사전 매핑
+            if missed_money > 0:
+                custom_cards = {
+                    "탕후루/마라탕 수명 단축 쿨타임 (1회 18,000원)": {"title": "🩸 혈당 폭발 마라탕 중독자", "desc": "마라 국물과 설탕 코팅에 영혼을 저당 잡아 혈당을 올리는 사이, 본인의 시드머니는 주식 시장에서 완전히 녹아내리게 방치한 위대한 푸드 파이터"},
+                    "스타벅스 바닐라라떼+디저트 (1회 11,000원)": {"title": "☕ 사이렌 오더 기부 천사", "desc": "매달 스타벅스 별사냥과 고카페인 시럽에 취해 살며 스타벅스 코리아 매출 상승에는 기여했으나 정작 본인 계좌는 공황 상태에 빠뜨린 주주"},
+                    "올리브영 세일 '구경만' 가기 (1회 45,000원)": {"title": "💄 올리브영 탕진 잼 마스터", "desc": "세일 문자만 오면 '구경만 해야지' 하고 들어가 틴트와 팩으로 바구니를 채우며 CJ 올리브영 시총 방어에 본인 시드를 갈아 넣은 VVIP 흑우"},
+                    "불금 배달 엽떡+치킨 세트 (1회 32,000원)": {"title": "🐔 배달 앱 다이아몬드 등급", "desc": "금요일 밤의 고독과 스트레스를 캡사이신과 튀김 옷으로 위로하느라, 통장에 억 단위 자산이 쌓일 기회를 아주 야무지게 씹어 삼키신 야식 마스터"},
+                    "지그재그/W컨셉 충동 의류 매수 (1회 65,000원)": {"title": "👗 새벽 배송 폰결제 야수", "desc": "침대에 누워 흐린 눈으로 옷 구경하다 네이버페이 6자리를 광속으로 태우며, 방구석 드레스룸은 채웠으나 자산 포트폴리오는 전라로 만든 패셔니스타"},
+                    "매달 속눈썹 펌/네일 정기권 (1회 55,000원)": {"title": "💅 손끝 발끝 풀소유 영애", "desc": "손톱 위에 파츠를 올리고 눈썹을 바짝 끌어올려 비주얼 품격은 유지했으나, 정작 본인 자산 성장률은 바닥에 바짝 붙여버린 관리의 대가"},
+                    "퇴근 후 카미카제 주말 위스키 (1회 85,000원)": {"title": "🥃 고독한 오크통 주주", "desc": "피트 향 머금은 싱글몰트로 오늘 하루의 서러움을 녹이려다 통장 잔고까지 완벽하게 증발시켜 미장 빅테크 주주들의 기쁨이 되어주신 알코올 요정"},
+                    "플랫폼 가챠/게임 스킨 현질 (1회 50,000원)": {"title": "🎮 데이터 쪼가리 풀소유 야수", "desc": "모니터 속 전설 스킨과 가챠 연출의 도파민에 취해 클릭 몇 번으로 실제 집 한 채 살 돈을 게임 서버 유지비로 쾌척해 버린 명예 야수"},
+                    "주말 골프 연습장/필드 호사 (1회 120,000원)": {"title": "⛳ 잔디밭 지출의 나이스샷", "desc": "굿샷을 외치며 그린 위에서 호사를 누리는 동안 정작 본인 주식 자산 포트폴리오는 OB 구역 숲속으로 완벽하게 날려버린 필드의 타이거 흑우"},
+                    "기념일 에피타이저 오마카세 (1회 150,000원)": {"title": "🍣 럭셔리 파인다이닝 영애", "desc": "셰프의 친절한 설명을 들으며 입안의 사치를 즐기는 순간, 내 통장 잔고는 엔비디아의 성장 에너지를 먹지 못해 원자 단위로 굶주려가던 모순의 극치"},
+                    "체형 교정 명목 필라테스 (1회 60,000원)": {"title": "🧘 기구 위에서 비명지르는 영애", "desc": "코어 근육을 단단하게 잡아내어 척추 정렬에는 성공했으나, 정작 미래 내 집 마련을 위한 자산의 척추는 완벽하게 무너뜨린 관리의 모순"},
+                    "유럽 축구 구단 감성 레플리카 유니폼 (1회 140,000원)": {"title": "⚽ 방구석 올드 트래포드 구단주", "desc": "해외 축구 구단의 엠블럼 패치를 보며 밤마다 열광했으나, 정작 본인 자산 리그는 4부 리그 강등권에서 처참하게 헤매게 만든 유니폼 수집가"}
+                }
+                card_info = custom_cards.get(habit, {"title": "🛍️ 프로 시발비용러", "desc": "소소한 지출로 도파민을 채우며 미래 자산 퀀텀점프의 기회를 쿨하게 걷어차신 직장인 영애/대리"})
+            else:
+                card_info = {"title": "🛡️ 자산 수호 헷지 명인", "desc": "폭락 사이클을 영리한 탕진 소비로 우회 방어해 낸 금융 위기관리의 천재"}
+
+            # HTML 꼬임 방지를 위해 완벽히 검증된 Streamlit 네이티브 외곽선 연출 및 메트릭 패키징
+            with st.container(border=True):
+                st.markdown(f"<center><b>🦜 GGUL-MUSAET AUDIT REPORT</b></center>", unsafe_allow_html=True)
+                st.markdown(f"<center><h3 style='margin:10px 0;'>\"{habit_clean_name}\"</h3></center>", unsafe_allow_html=True)
+                st.caption(f"<center>참고 {asset_clean_name} 매수하고 미래로 {years}년 직진했다면?</center>", unsafe_allow_html=True)
+                st.write("")
+                
+                # 아기자기하고 보기 좋게 숫자를 배치
+                sub_col1, sub_col2 = st.columns(2)
+                with sub_col1:
+                    st.metric(label="💸 사라진 내 원금", value=f"{int(total_seed):,} 원")
+                with sub_col2:
+                    st.metric(label="🔮 미래 최종 잔고 예측", value=f"{int(future_value):,} 원")
+                
+                st.write("")
+                # 등급과 일침 한탄 멘트를 카드 안으로 완전 병합!
+                if missed_money > 0:
+                    st.error(f"🏅 **흑우 판정 등급: {card_info['title']}**\n\n{card_info['desc']}")
+                else:
+                    st.success(f"🏅 **판정 등급: {card_info['title']}**\n\n{card_info['desc']}")
+                
+                st.caption("<center>📸 스마트폰 화면을 이 카드 크기에 맞춰 캡처 후 인스타 스토리에 올리세요!</center>", unsafe_allow_html=True)
+
+            # 2. 하단 상세 브리핑 브레이크다운
             st.write("")
-            st.markdown("<h3 style='color: #FFFFFF; font-size: 17px;'>📊 1. 과거 데이터 기반 실시간 정산</h3>", unsafe_allow_html=True)
+            st.markdown("<h3 style='color: #FFFFFF; font-size: 17px;'>📊 2. 과거 데이터 기반 세부 실시간 정산</h3>", unsafe_allow_html=True)
             res_col1, res_col2, res_col3 = st.columns(3)
             with res_col1: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: #AAADB0; font-weight: 500;">🪙 총 지출 매몰 원금</div><div style="font-size: 22px; font-weight: 600; color: #FFFFFF; margin-top: 5px;">{int(total_seed):,} 원</div></div>""", unsafe_allow_html=True)
             with res_col2: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: #81C995; font-weight: 500;">📈 현재 자산 가치 (오늘)</div><div style="font-size: 22px; font-weight: 600; color: #81C995; margin-top: 5px;">{int(final_value):,} 원</div></div>""", unsafe_allow_html=True)
@@ -151,63 +201,7 @@ else:
                 status_text = "🚨 기회상실 순손실액" if missed_money > 0 else "🛡️ 리스크 최종 방어액"
                 st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: {card_color}; font-weight: 500;">{status_text}</div><div style="font-size: 22px; font-weight: 600; color: {card_color}; margin-top: 5px;">{"+" if missed_money > 0 else ""}{int(missed_money):,} 원</div></div>""", unsafe_allow_html=True)
 
-            # 2. 미래 퀀텀점프 예측
-            st.write("")
-            st.markdown(f"<h3 style='color: #FFFFFF; font-size: 17px;'>🔮 2. 미래 {years}년 뒤 자산 행복회로 퀀텀점프 예측</h3>", unsafe_allow_html=True)
-            fut_col1, fut_col2 = st.columns(2)
-            with fut_col1: st.markdown(f"""<div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;"><div style="font-size: 12px; color: #D6BCFA; font-weight: 500;">🚀 미래 엔진에 투영된 과거 에너모멘텀</div><div style="font-size: 24px; font-weight: 600; color: #D6BCFA; margin-top: 5px;">{total_asset_growth:+.2f} % 직진 반영</div></div>""", unsafe_allow_html=True)
-            with fut_col2: st.markdown(f"""<div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;"><div style="font-size: 12px; color: #FFD700; font-weight: 500;">💰 미래 {years}년 뒤 최종 잔고 예측</div><div style="font-size: 24px; font-weight: 600; color: #FFD700; margin-top: 5px;">{int(future_value):,} 원</div></div>""", unsafe_allow_html=True)
-
-            # 📸 3. 인스타 스토리 맞춤형 '인싸 감성 스퀘어 캡처 카드' UI (오타 완치 부위!)
-            st.write("")
-            st.markdown("<h3 style='color: #FFFFFF; font-size: 17px;'>📸 1. 인스타 스토리 박제용 캡처 카드</h3>", unsafe_allow_html=True)
-            habit_clean_name = habit.split(" (")[0]
-            asset_clean_name = target_asset.split(" (")[0]
-            
-            # unsafe_allow_html=True 옵션을 뒤에 확실히 붙여서 제대로 렌더링되게 만들었습니다!
-            st.markdown(f"""
-                <div style="background: linear-gradient(135deg, #121212 0%, #1A1A2E 100%); border: 3px solid #9B51E0; padding: 30px; border-radius: 20px; max-width: 440px; margin: 0 auto; color: #FFFFFF; box-shadow: 0 10px 30px rgba(155,81,224,0.3); text-align: center; aspect-ratio: 1/1; display: flex; flex-direction: column; justify-content: center;">
-                    <span style="font-size: 11px; letter-spacing: 3px; color: #9B51E0; font-weight: bold; text-transform: uppercase; margin-bottom: 15px;">📊 MY SHIBAL COST REPORT</span>
-                    
-                    <h2 style="font-size: 26px; font-weight: 800; color: #FFFFFF; margin: 0 0 5px 0; letter-spacing: -1px;">"{habit_clean_name}"</h2>
-                    <span style="font-size: 14px; color: #AAADB0; font-weight: 400;">참고 {asset_clean_name} 매수했으면..</span>
-                    
-                    <div style="margin: 25px 0; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 20px 0;">
-                        <div style="font-size: 12px; color: #AAADB0; margin-bottom: 5px;">💸 사라진 내 원금</div>
-                        <div style="font-size: 20px; font-weight: 700; color: #F28B82; margin-bottom: 15px;">{int(total_seed):,} 원</div>
-                        
-                        <div style="font-size: 12px; color: #AAADB0; margin-bottom: 5px;">🔮 미래 {years}년 퀀텀 예측 잔고</div>
-                        <div style="font-size: 28px; font-weight: 800; color: #FFD700; background: linear-gradient(45deg, #FFD700, #FFA500); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{int(future_value):,} 원</div>
-                    </div>
-                    
-                    <span style="font-size: 12px; color: #9B51E0; font-weight: bold;">🦜 껄무새 대시보드에서 나도 확인하기</span>
-                </div>
-            """, unsafe_allow_html=True)
-
-            # 4. 소비 맞춤형 흑우 등급 인증서
-            st.write("")
-            if missed_money > 0:
-                custom_cards = {
-                    "탕후루/마라탕 수명 단축 쿨타임 (1회 18,000원)": {"title": "🩸 혈당 폭발 마라탕 중독자", "desc": "마라 국물과 설탕 코팅에 영혼을 저당 잡아 혈당을 올리는 사이, 본인의 시드머니는 주식 시장에서 완전히 녹아내리게 방치한 위대한 푸드 파이터", "bg": "linear-gradient(135deg, #8B0000 0%, #1A1D20 100%)"},
-                    "스타벅스 바닐라라떼+디저트 (1회 11,000원)": {"title": "☕ 사이렌 오더 기부 천사", "desc": "매달 스타벅스 별사냥과 고카페인 시럽에 취해 살며 스타벅스 코리아 매출 상승에는 기여했으나 정작 본인 계좌는 공황 상태에 빠뜨린 주주", "bg": "linear-gradient(135deg, #124E3F 0%, #1A1D20 100%)"},
-                    "올리브영 세일 '구경만' 가기 (1회 45,000원)": {"title": "💄 올리브영 탕진 잼 마스터", "desc": "세일 문자만 오면 '구경만 해야지' 하고 들어가 틴트와 팩으로 바구니를 채우며 CJ 올리브영 시총 방어에 본인 시드를 갈아 넣은 VVIP 흑우", "bg": "linear-gradient(135deg, #5B7065 0%, #1A1D20 100%)"},
-                    "불금 배달 엽떡+치킨 세트 (1회 32,000원)": {"title": "🐔 배달 앱 다이아몬드 등급", "desc": "금요일 밤의 고독과 스트레스를 캡사이신과 튀김 옷으로 위로하느라, 통장에 억 단위 자산이 쌓일 기회를 아주 야무지게 씹어 삼키신 야식 마스터", "bg": "linear-gradient(135deg, #4A154B 0%, #1A1D20 100%)"},
-                    "지그재그/W컨셉 충동 의류 매수 (1회 65,000원)": {"title": "👗 새벽 배송 폰결제 야수", "desc": "침대에 누워 흐린 눈으로 옷 구경하다 네이버페이 6자리를 광속으로 태우며, 방구석 드레스룸은 채웠으나 자산 포트폴리오는 전라로 만든 패셔니스타", "bg": "linear-gradient(135deg, #3A225D 0%, #1A1D20 100%)"},
-                    "매달 속눈썹 펌/네일 정기권 (1회 55,000원)": {"title": "💅 손끝 발끝 풀소유 영애", "desc": "손톱 위에 파츠를 올리고 눈썹을 바짝 끌어올려 비주얼 품격은 유지했으나, 정작 본인 자산 성장률은 바닥에 바짝 붙여버린 관리의 대가", "bg": "linear-gradient(135deg, #1C3D5A 0%, #1A1D20 100%)"},
-                    "퇴근 후 카미카제 주말 위스키 (1회 85,000원)": {"title": "🥃 고독한 알코올 오크통 주주", "desc": "피트 향 머금은 싱글몰트로 오늘 하루의 서러움을 녹이려다 통장 잔고까지 완벽하게 증발시켜 미장 빅테크 주주들의 기쁨이 되어주신 알코올 요정", "bg": "linear-gradient(135deg, #8A4F1D 0%, #1A1D20 100%)"},
-                    "플랫폼 가챠/게임 스킨 현질 (1회 50,000원)": {"title": "🎮 데이터 쪼가리 풀소유 야수", "desc": "모니터 속 전설 스킨과 가챠 연출의 도파민에 취해 클릭 몇 번으로 실제 집 한 채 살 돈을 게임 서버 유지비로 쾌척해 버린 명예 넥슨/엔씨 주주", "bg": "linear-gradient(135deg, #2D3748 0%, #1A1D20 100%)"},
-                    "주말 골프 연습장/필드 호사 (1회 120,000원)": {"title": "⛳ 잔디밭 지출의 나이스샷", "desc": "굿샷을 외치며 그린 위에서 호사를 누리는 동안 정작 본인 주식 자산 포트폴리오는 OB 구역 숲속으로 완벽하게 날려버린 필드의 타이거 흑우", "bg": "linear-gradient(135deg, #2F855A 0%, #1A1D20 100%)"},
-                    "기념일 에피타이저 오마카세 (1회 150,000원)": {"title": "🍣 흐린눈 럭셔리 파인다이닝 영애", "desc": "셰프의 친절한 설명을 들으며 입안의 사치를 즐기는 순간, 내 통장 잔고는 엔비디아의 성장 에너지를 먹지 못해 원자 단위로 굶주려가던 모순의 극치", "bg": "linear-gradient(135deg, #744210 0%, #1A1D20 100%)"},
-                    "체형 교정 명목 필라테스 (1회 60,000원)": {"title": "🧘 기구 위에서 비명지르는 영애", "desc": "코어 근육을 단단하게 잡아내어 척추 정렬에는 성공했으나, 정작 미래 내 집 마련을 위한 자산의 척추는 완벽하게 무너뜨린 관리의 모순", "bg": "linear-gradient(135deg, #4A5568 0%, #1A1D20 100%)"},
-                    "유럽 축구 구단 감성 레플리카 유니폼 (1회 140,000원)": {"title": "⚽ 방구석 올드 트래포드 구단주", "desc": "해외 축구 구단의 엠블럼 패치를 보며 밤마다 열광했으나, 정작 본인 자산 리그는 4부 리그 강등권에서 처참하게 헤매게 만든 유니폼 수집가", "bg": "linear-gradient(135deg, #9B2C2C 0%, #1A1D20 100%)"}
-                }
-                card_info = custom_cards.get(habit, {"title": "🛍️ 프로 시발비용러", "desc": "소소한 지출로 도파민을 채우며 미래 자산 퀀텀점프의 기회를 쿨하게 걷어차신 직장인 영애/대리", "bg": "linear-gradient(135deg, #4A5568 0%, #1A1D20 100%)"})
-            else:
-                card_info = {"title": "🛡️ 자산 수호 헷지 명인", "desc": "폭락 사이클을 영리한 탕진 소비로 우회 방어해 낸 금융 위기관리의 천재", "bg": "linear-gradient(135deg, #1B4D3E 0%, #1A1D20 100%)"}
-            
-            st.markdown(f"""<div style="background: {card_info['bg']}; border: 1px dashed rgba(255,255,255,0.2); padding: 20px; border-radius: 12px; text-align: center; color: #FFFFFF; font-size: 13.5px; max-width: 440px; margin: 15px auto;"><b>🏅 흑우 판정 등급: {card_info['title']}</b><br><span style='color: #E8EAED; font-size:12.5px;'>{card_info['desc']}</span></div>""", unsafe_allow_html=True)
-
-        # 5. 실시간 방명록 한탄방
+        # 3. 실시간 방명록 한탄방
         st.write("---")
         st.markdown("<h3 style='color: #FFFFFF; font-size: 17px;'>💬 실시간 월급루팡 익명 한탄방</h3>", unsafe_allow_html=True)
         user_comment = st.text_input("💬 한마디 남기기 (Enter 입력 시 등록)", placeholder="예: 위스키 마실 돈 모았으면 이미 테슬라 몰고 대리 불렀지..")
