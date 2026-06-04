@@ -43,6 +43,25 @@ if "vote_data" not in st.session_state:
 if "current_audit" not in st.session_state:
     st.session_state["current_audit"] = None
 
+# 무한 밸런스 게임 10종 리스트 & 투표 데이터 상태 정의
+if "balance_games" not in st.session_state:
+    st.session_state["balance_games"] = [
+        {"id": 0, "q": "평생 동안 둘 중 딱 하나만 선택하여 살아갈 수 있다면?", "opt_a": "평생 배달 엽떡+치킨+스벅 끊고 그 돈 전액 엔비디아 무지성 적립 매수", "opt_b": "평생 패션/올영 전면 금지당하는 대신 고점 물려 -70% 토막 난 삼전 원금 강제 복구", "votes_a": 142, "votes_b": 98},
+        {"id": 1, "q": "만약 한 달 동안 둘 중 하나만 반값 할인 혜택을 받는다면?", "opt_a": "한 달간 내 모든 배달비, 마라탕, 위스키 값 전면 50% 반값 바겐세일", "opt_b": "한미반도체 오늘 하루 동안 내 평단가 기준으로 50% 특별 추가 할인 분할 매수", "votes_a": 85, "votes_b": 112},
+        {"id": 2, "q": "내 스마트폰에서 평생 하나의 영구 차단 패널티를 부여받아야 한다면?", "opt_a": "지그재그, W컨셉 등 모든 의류 모바일 결제 앱 계정 영구 삭제 및 가입 금지", "opt_b": "테슬라(TSLA) 주식 평생 매수 금지당하고 마이너스 계좌 강제 동결", "votes_a": 94, "votes_b": 76},
+        {"id": 3, "q": "내 건강 자산과 금융 자산의 극단적인 딜이 들어왔다면?", "opt_a": "평생 속눈썹/네일 파츠 펌 금지당하는 대신 SK하이닉스 평단 5만원대 계좌 획득", "opt_b": "손톱 숨 쉴 구멍 없이 풀 파츠 올리고 한눈판 사이에 마이크론 고점 풀영끌 물리기", "votes_a": 121, "votes_b": 45},
+        {"id": 4, "q": "퇴근 후 즐거움 중 단 하나만 평생 압수당해야 한다면?", "opt_a": "퇴근 후 주말 싱글몰트 피트 위스키 혼술하는 즐거움 영구 박탈당하기", "opt_b": "구글(GOOGL) 소수점 자동 적립식 이체 계정 영구 폐쇄당하고 강제 예금행", "votes_a": 73, "votes_b": 139},
+        {"id": 5, "q": "주말 액티비티 중 사치 지수를 하나만 조정해야 한다면?", "opt_a": "주말 명품 골프 필드 나가는 호사 영구 정지당하고 방구석 스크린 골프만 치기", "opt_b": "샌디스크/WDC에 3년 동안 모은 돈 영끌했다가 주가 반토막 난 채로 손절 금지", "votes_a": 110, "votes_b": 88},
+        {"id": 6, "q": "인스타용 미식 라이프스타일 중 하나만 영구 포기한다면?", "opt_a": "기념일 에피타이저 오마카세 및 파인다이닝 예약권 평생 영구 박탈당하기", "opt_b": "엔비디아 주식 소수점 다 팔고 국장 동전주 연속 5연상 가기 기도 메타 탑승", "votes_a": 102, "votes_b": 95},
+        {"id": 7, "q": "내 몸의 기계적 척추와 자산의 척추 중 하나만 정렬한다면?", "opt_a": "체형 교정 명목 고액 필라테스 영구 정지당하고 평생 국민체조로 척추 펴기", "opt_b": "내가 적립식으로 모은 삼성전기 MLCC가 우주선 부품으로 선정되어 300% 떡상", "votes_a": 64, "votes_b": 152},
+        {"id": 8, "q": "취미 덕질 영역 중 평생 동안 하나만 박탈당한다면?", "opt_a": "덕질 게임 가챠, 가상 스킨, 플랫폼 아바타 현질 권리 영구 박탈당하기", "opt_b": "엔비디아 젠슨 황과 1:1 프라이빗 디너 가지며 다음 세대 GPU 출시 꿀팁 듣기", "votes_a": 53, "votes_b": 164},
+        {"id": 9, "q": "해외 축구 덕질과 자산 포트폴리오 중 하나만 고른다면?", "opt_a": "평생 내 최애 축구단 감성 레플리카 유니폼 수집 및 직관 기회 영구 정지", "opt_b": "구단 레플리카 살 돈으로 그 구단 주식 야무지게 적립해서 명예 소액 주주되기", "votes_a": 89, "votes_b": 118}
+    ]
+if "current_game_index" not in st.session_state:
+    st.session_state["current_game_index"] = 0
+if "last_voted_result" not in st.session_state:
+    st.session_state["last_voted_result"] = None
+
 # 🔴 AREA A: 부장님 방어막
 if is_boss_mode:
     st.error("🔒 [보안] 本 화면은 사내 인트라넷 자산입니다. 외부 유출을 금합니다.")
@@ -188,6 +207,7 @@ else:
 
                 # 대화방 연동용 데이터 보관 및 정신승리 데이터 연산 바인딩
                 st.session_state["current_audit"] = {
+                    "habit_key": selected_option, # 포모 차단기 1:1 매칭용 키 추가
                     "habit": habit_clean_name,
                     "asset": asset_clean_name,
                     "future_val": f"{int(future_value):,} 원",
@@ -220,7 +240,7 @@ else:
                 st.markdown(f"<h3 style='color: #FFFFFF; font-size: 17px;'>🔮 2. 미래 {years}년 뒤 자산 행복회로 퀀텀점프 예측</h3>", unsafe_allow_html=True)
                 fut_col1, fut_col2 = st.columns(2)
                 with fut_col1: st.markdown(f"""<div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;"><div style="font-size: 12px; color: #D6BCFA; font-weight: 500;">🚀 미래 엔진에 투영된 과거 에너모멘텀</div><div style="font-size: 22px; font-weight: 600; color: #D6BCFA; margin-top: 5px;">{total_asset_growth:+.2f} % 직진 반영</div></div>""", unsafe_allow_html=True)
-                with fut_col2: st.markdown(f"""<div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;"><div style="font-size: 12px; color: #FFD700; font-weight: 500;">💰 미래 {years}년 뒤 최종 잔고 예측</div><div style="font-size: 22px; font-weight: 600; color: #FFD700; margin-top: 5px;">{int(future_value):,} 원</div></div>""", unsafe_allow_html=True)
+                with fut_col2: st.markdown(f"""<div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1FFD700; background-color: #1A1B2F;"><div style="font-size: 12px; color: #FFD700; font-weight: 500;">💰 미래 {years}년 뒤 최종 잔고 예측</div><div style="font-size: 22px; font-weight: 600; color: #FFD700; margin-top: 5px;">{int(future_value):,} 원</div></div>""", unsafe_allow_html=True)
 
                 # 🛠️ [기획 핵심 이식 2] 3. 인스타 스토리 '껄껄 리포트' 카드 (완벽한 오류 회피형 인라인 CSS)
                 st.write("")
@@ -293,51 +313,117 @@ else:
         # TAB 3: 밸런스 게임
         with tab3:
             st.markdown("### ⚔️ 주주총회 자산 파괴 밸런스 게임")
-            st.write("**Q. 평생 동안 다음 중 딱 하나의 상황만 선택해야 한다면?**")
+            st.write("2030 영애·대리들의 계좌와 멘탈을 완벽하게 고문하는 극한의 밸런스 매치업입니다.")
+            
+            # 현재 게임 인덱스 및 세팅
+            game_idx = st.session_state["current_game_index"]
+            game = st.session_state["balance_games"][game_idx]
+            
+            st.markdown(f"**질문 {game_idx + 1} / 10**")
+            st.markdown(f"#### Q. {game['q']}")
+            
             col_v1, col_v2 = st.columns(2)
             with col_v1:
-                if st.button("🅰️ 평생 배달 야식+스타벅스 완전히 끊고, 그 돈 전액 엔비디아 적립식 풀매수", key="v_a"): st.session_state["vote_data"]["A"] += 1; st.rerun()
+                if st.button(f"🅰️ {game['opt_a']}", key=f"btn_a_{game_idx}"):
+                    st.session_state["balance_games"][game_idx]["votes_a"] += 1
+                    # 이전 투표 결과 캐싱 후 다음 게임 이동
+                    tot = game["votes_a"] + game["votes_b"] + 1
+                    st.session_state["last_voted_result"] = {
+                        "q": game["q"],
+                        "voted": "🅰️ " + game["opt_a"],
+                        "pct_a": ( (game["votes_a"] + 1) / tot ) * 100,
+                        "pct_b": ( game["votes_b"] / tot ) * 100,
+                        "total": tot
+                    }
+                    st.session_state["current_game_index"] = (game_idx + 1) % len(st.session_state["balance_games"])
+                    st.toast("✅ 투표 성공! 다음 질문으로 넘어갑니다.")
+                    st.rerun()
             with col_v2:
-                if st.button("🅱️ 평생 패션/올영 전면 금지당하는 대신 고점 물린 삼전 원금 강제 회복", key="v_b"): st.session_state["vote_data"]["B"] += 1; st.rerun()
-            total_votes = st.session_state["vote_data"]["A"] + st.session_state["vote_data"]["B"]
-            per_A = (st.session_state["vote_data"]["A"] / total_votes) * 100
-            st.progress(int(per_A))
-            st.caption(f"📊 실시간 주주총회 의결 현황: 🅰️ {per_A:.1f}% vs 🅱️ {100-per_A:.1f}% (총 {total_votes}명 키보드 배틀 중)")
+                if st.button(f"🅱️ {game['opt_b']}", key=f"btn_b_{game_idx}"):
+                    st.session_state["balance_games"][game_idx]["votes_b"] += 1
+                    tot = game["votes_a"] + game["votes_b"] + 1
+                    st.session_state["last_voted_result"] = {
+                        "q": game["q"],
+                        "voted": "🅱️ " + game["opt_b"],
+                        "pct_a": ( game["votes_a"] / tot ) * 100,
+                        "pct_b": ( (game["votes_b"] + 1) / tot ) * 100,
+                        "total": tot
+                    }
+                    st.session_state["current_game_index"] = (game_idx + 1) % len(st.session_state["balance_games"])
+                    st.toast("✅ 투표 성공! 다음 질문으로 넘어갑니다.")
+                    st.rerun()
+            
+            # 이전 라운드의 리얼 투표 결과 실시간 아기자기 표시
+            if st.session_state["last_voted_result"] is not None:
+                last_res = st.session_state["last_voted_result"]
+                with st.container(border=True):
+                    st.markdown(f"🗳️ **직전 투표 결과 브리핑**")
+                    st.caption(f"Q. {last_res['q']}")
+                    st.markdown(f"선택: `{last_res['voted']}`")
+                    st.progress(int(last_res["pct_a"]))
+                    st.caption(f"📊 주주 지지율: 🅰️ {last_res['pct_a']:.1f}% vs 🅱️ {last_res['pct_b']:.1f}% (총 {last_res['total']}명 참전)")
 
         # TAB 4: 포모 차단기
         with tab4:
             st.markdown("### 🧠 뇌과학 기반 멘탈 세이프티 포모(FOMO) 차단기")
-            st.write("주식 안 사고 시발비용으로 탕진한 나 자신에게 바치는 과학적 정신 승리 진단서")
+            st.write("주식 안 사고 내 몸과 정신에 맛있고 예쁘게 탕진한 나 자신을 위한 과학적 정신 승리 진단서")
             
             if st.session_state["current_audit"] is None:
                 st.warning("💡 먼저 '📊 자산 타임머신' 탭에서 시뮬레이션을 한 번 돌리고 오셔야 정밀 뇌스캔이 작동합니다!")
             else:
                 audit_data = st.session_state["current_audit"]
-                st.write("")
-                st.info(f"🔍 **포모 진단 대상 지출:** '{audit_data['habit']}' ➡️ 대체 자산: '{audit_data['asset']}'")
+                habit_key = audit_data.get("habit_key", "")
+                habit_clean_name = audit_data["habit"]
+                asset_clean_name = audit_data["asset"]
                 
+                # 뇌과학적 모근 수치 연산
                 base_seed = audit_data["seed"]
                 dopamine_score = int((base_seed / 10000) * 12) + 500
                 cortisol_saved = int(dopamine_score * 8.4)
                 hair_saved = int(base_seed / 250000) + 120
                 
+                # 🛍️ 소비성 항목별 1:1 매칭 멘탈 위로 데이터베이스 구축
+                custom_fomo_dict = {
+                    "탕후루/마라탕 수명 단축 쿨타임 (1회 18,000원)": "수명 쿨타임을 마라의 캡사이신 자극으로 연장하는 도파민 대환장 파티! 만약 주식 사서 매일 장대 음봉 보며 피눈물 흘렸다면, 위궤양과 역류성 식도염으로 이미 위장 세포 수천만 개가 궤멸했을 것입니다. 장 정렬과 위장 평화를 지켜낸 님이 진정한 건강 주주입니다.",
+                    "스타벅스 바닐라라떼+디저트 (1회 11,000원)": "매일 아침 달콤한 액상과당과 고농축 카페인으로 뇌세포에 활력을 가득 불어넣은 현명한 선택! 파랗게 물들어가는 빅테크 주식 창을 보며 머리를 쥐어짜다 혈압 상승으로 쓰러질 뻔한 뇌졸중 리스크를 스타벅스 컵 홀더로 완벽하게 헤징해 냈습니다.",
+                    "올리브영 세일 '구경만' 가기 (1회 45,000원)": "화장대 위에 영롱한 틴트와 마스크팩을 가득 채우며 시각적 품격과 피부 진정을 달성한 VVIP 영애! 주식 하락세를 보며 얼굴을 찡그리느라 생겨났을 미간 주름과 피부 노화 진행을 올리브영 세일 패키지로 철통 방어해 냈습니다. 거울 속에 빛나는 님이 진정한 자산입니다.",
+                    "불금 배달 엽떡+치킨 세트 (1회 32,000원)": "일주일의 서러움과 노동의 고단함을 화끈한 엽기떡볶이와 바삭한 튀김옷으로 야무지게 씻어내어 뇌내 세로토닌을 퀀텀점프 시킨 신의 한 수! 주식 고점에 물려 주말 내내 주식 게시판에서 키보드 배틀 뜨느라 뇌세포 3억 개를 소멸시킬 뻔한 스트레스 폭탄을 치킨무 국물로 진화하셨습니다.",
+                    "지그재그/W컨셉 충동 의류 매수 (1회 65,000원)": "내 방 옷장에 예쁜 전투복을 가득 채워 출근길 어깨를 펴고 도파민 서장을 달성한 패셔니스타! 하락장 폭격을 맞고 헐벗은 계좌를 보며 멘탈이 전라(裸) 상태가 되어 떨고 있을 뻔한 최악의 사태를 지그재그 네이버페이 결제로 완벽 방어하셨습니다.",
+                    "매달 속눈썹 펌/네일 정기권 (1회 55,000원)": "손톱 위에 빛나는 파츠를 올리고 속눈썹을 바짝 올려 비주얼 아우라를 최상단 밴드로 유지하신 관리의 대가! 마이너스 난 잔고를 타이핑하며 손 떨다가 손톱 다 부러질 뻔한 우울증 리스크를, 영롱한 네일 정기권으로 완벽히 코팅하여 내면의 품격을 수호해 냈습니다.",
+                    "퇴근 후 카미카제 주말 위스키 (1회 85,000원)": "피트 향 가득한 싱글몰트 한 잔으로 오늘 하루의 노동 강박과 서러움을 원자 단위로 분해해 낸 위대한 연금술사! 주식 호가창의 초록불 빨간불에 영혼이 털리며 피폐해졌을 멘탈을 숙성 오크통의 은총으로 사수하셨습니다. 간은 힘들어도 영혼은 풍요롭습니다.",
+                    "플랫폼 가챠/게임 스킨 현질 (1회 50,000원)": "모니터 속 넷상 전설 스킨의 화려한 임팩트로 어깨에 우주적 뽕을 주입해 낸 데이터 자산의 명예 구단주! 실물 없는 주식 시장의 세력 상어들에게 내 금쪽같은 현금을 먹히느라 홧병 생길 뻔한 스트레스를, 화려한 인게임 연출 도파민으로 조기 진화 완료했습니다.",
+                    "주말 골프 연습장/필드 호사 (1회 120,000원)": "탁 트인 푸른 잔디밭에서 호쾌하게 드라이버를 갈기며 우주적 호사를 누린 스포츠의 제왕! 주가 차트의 OB 구역 폭락을 보며 멘탈이 산산조각 나 머리 빠질 탈모 위험을, 피톤치드 가득한 필드 위 나이스샷으로 모근 세포 약 15만 개를 든든하게 방어해 내셨습니다.",
+                    "기념일 에피타이저 오마카세 (1회 150,000원)": "셰프의 우아한 서비스와 참치 뱃살의 사치를 혀끝으로 고스란히 느끼며 자존감을 천상계로 끌어올린 금융 미식가! 반도체 횡보장을 버티다 위벽이 헐어 위산 과다로 고통받을 기회비용을 오마카세 스페셜 피스로 가차 없이 헷징해 낸 영리한 혀끝의 트레이더십니다.",
+                    "체형 교정 명목 필라테스 (1회 60,000원)": "무거운 기구 위에서 비명을 지르며 척추 뼈마디 정렬을 기어이 성공시킨 코어 자산의 사령탑! 마이너스 계좌를 보며 척추를 구부정하게 만 채 실시간으로 척추 디스크 터질 뻔한 위기를, 기구 필라테스로 꼿꼿하게 버텨내 통장 척추 대신 진짜 내 척추를 수호하셨습니다.",
+                    "유럽 축구 구단 감성 레플리카 유니폼 (1회 140,000원)": "최애 구단 엠블럼을 가슴에 박고 밤마다 맥주를 들이켜며 전 세계 축덕들과 유대 에너지를 뿜어낸 골수 구단주! 내가 적립식으로 모은 주식이 4부 리그로 처참하게 강등당해 심근경색 올 뻔한 리스크를, 영롱한 레플리카 수집 도파민으로 평화롭게 우회 헷징 하셨습니다."
+                }
+                
+                # 직접 입력 유저를 위한 범용 멘트
+                default_fomo = f"본인만의 확고하고 독창적인 고유 소비 버릇인 '{habit_clean_name}'에 시드를 털어 넣어 일상 도파민 자산을 획득한 금융 헷지 마스터! 주식의 하방 폭격을 얻어맞고 홧병으로 뇌세포 3억 개가 동시 폭파당할 뻔한 리스크를, 힙하고 맛있는 탕진 소비로 선제 방어하셨습니다. 님 돈 님 소비 나이스샷!"
+                tailored_report = custom_fomo_dict.get(habit_key, default_fomo)
+                
                 with st.container(border=True):
                     st.markdown(f"<center><b>🧠 귀하의 소비 행동에 따른 생체 이득 정산서</b></center>", unsafe_allow_html=True)
                     st.write("")
+                    
                     m_c1, m_c2, m_c3 = st.columns(3)
-                    with m_c1: st.metric(label="🔋 충전된 도파민", value=f"{dopamine_score:,} pg/mL", delta="인생 행복 수치 증가")
-                    with m_c2: st.metric(label="🛡️ 방어한 스트레스 (코르티솔)", value=f"{cortisol_saved:,} 🌟", delta="주식 창 보며 울화통 차단")
+                    with m_c1: st.metric(label="🔋 충전된 도파민", value=f"{dopamine_score:,} pg/mL", delta="인생 행복 지수 증가")
+                    with m_c2: st.metric(label="🛡️ 방어한 스트레스 (코르티솔)", value=f"{cortisol_saved:,} 🌟", delta="주식 화병 완벽 차단")
                     with m_c3: st.metric(label="💇 사수한 모근(毛根) 개수", value=f"약 {hair_saved:,} 개", delta="하락장 탈모 리스크 헷지")
+                    
                     st.write("---")
                     st.markdown(f"""
-                    **💡 껄무새 도사의 최종 뇌과학 위로 소견서** 만약 귀하가 탕진 지출 대신 눈물 흘려가며 진짜로 **'{audit_data['asset']}'** 주식을 매수했다면, 
-                    매일 오전 9시 주식 창이 열릴 때마다 심장이 벌렁거리고 스트레스 마귀로 인해 이미 **약 {hair_saved:,}개의 모근이 장렬히 탈모**되었을 것으로 추정됩니다.
+                    **💡 껄무새 도사의 최종 뇌과학 위로 소견서**  
+                    만약 귀하가 탕진 지출 대신 눈물 흘려가며 진짜로 **'{audit_data['asset']}'** 주식을 매수했다면, 매일 오전 9시 주식 창이 열릴 때마다 심장이 벌렁거리고 하락장 폭격을 맞으며 이미 **약 {hair_saved:,}개의 모근이 장렬히 탈모**되었을 것으로 추정됩니다.
                     
-                    비록 미래 자산 {audit_data['future_val']}의 기회비용은 날렸을지언정, 귀하는 '{audit_data['habit']}'을(를) 맛있고 힙하게 즐기며 **뇌세포 수천만 개 소멸을 완벽하게 방어하고 멘탈을 우량주 수준으로 수호**했습니다. 
-                    결론적으로 주식 시장의 상어들에게 물리느니 내 위장과 비주얼에 기부한 당신이 정신의학적 최종 승리자입니다. 마음 편하게 꿀잠 주무십시오! 🚀
+                    비록 미래 가치 {audit_data['future_val']}의 기회비용은 날렸을지언정, 귀하는 **'{habit_clean_name}'** 지출을 통해:
+                    
+                    > *{tailored_report}*
+                    
+                    결론적으로 주식 시장의 세력 상어들에게 뜯기느니 내 위장과 비주얼, 내 육체 자산에 영리하게 기부한 당신이 정신의학적 최종 승리자입니다. 마음 편하게 꿀잠 자고 내일 기분 좋게 루팡 하십시오! 🚀
                     """)
 
-    # ==================== [RIGHT SIDE] 실시간 우측 고정방 ====================
+    # ==================== [RIGHT SIDE] 우측 고정방 및 실시간 인원 카운터 ====================
     with chat_layout:
         try:
             from streamlit.runtime.runtime import Runtime
