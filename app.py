@@ -5,12 +5,12 @@ import random
 
 # 1. 제미나이 다크모드 기반 최적화 설정
 st.set_page_config(
-    page_title="✨ Gemini - 자산 최적화 시뮬레이션 v7", 
+    page_title="✨ Gemini - 자산 최적화 시뮬레이션 v9", 
     page_icon="✨",
     layout="centered" 
 )
 
-# 2. ⚡ 부장님 감지 패닉 버튼
+# 2. ⚡ 부장님 감지 패닉 버튼 (스페이스바 연타)
 js_panic_script = """
 <script>
     let lastKeyTime = 0;
@@ -31,15 +31,15 @@ js_panic_script = """
 components.html(js_panic_script, height=0, width=0)
 is_boss_mode = st.query_params.get("boss_mode", "false") == "true"
 
-# 익명 방명록을 위한 Streamlit 세션 스테이트 초기화
+# 익명 방명록용 세션 스테이트 초기화
 if "chat_log" not in st.session_state:
     st.session_state["chat_log"] = [
         "익명루팡1: 나 방금 올영 5년 모았는데 한미반도체 1억 날림;; 한강 간다",
-        "마라탕귀신: 마라탕 끊고 마이크론 간다 진짜 딱 기다려라",
+        "서학개미: 탕후루 안 먹고 테슬라 적립했으면 지금 모델Y 인도받으러 가고 있었네 하...",
         "킹받네: 주식 사서 까먹을 바엔 엽떡 치킨 먹은 내가 승리자 아님? ㅋㅋ"
     ]
 
-# 🔴 AREA A: 부장님 방어막
+# 🔴 AREA A: 부장님 방어막 (사내 ERP 화면)
 if is_boss_mode:
     st.error("🔒 [보안] 本 화면은 사내 인트라넷 자산입니다. 외부 유출을 금합니다.")
     st.title("📊 2026_전사_리소스_최적화_KPI_Data")
@@ -58,7 +58,10 @@ else:
         "삼성전자 (005930.KS)": {"current_price": 358250, "yearly_prices": [358250, 285000, 72500, 63100, 75500]},
         "SK하이닉스 (000660.KS)": {"current_price": 168000, "yearly_prices": [168000, 142000, 115000, 92000, 121000]},
         "한미반도체 (042700.KS)": {"current_price": 142500, "yearly_prices": [142500, 118000, 61000, 14500, 18500]},
+        "삼성전기 (009150.KS)": {"current_price": 156500, "yearly_prices": [156500, 148000, 138000, 142000, 175000]},
         "엔비디아 (NVDA)": {"current_price": 125, "yearly_prices": [125, 85, 38, 16, 22]},
+        "테슬라 (TSLA)": {"current_price": 178, "yearly_prices": [178, 210, 185, 290, 230]},
+        "구글 (GOOGL)": {"current_price": 174, "yearly_prices": [174, 150, 105, 95, 130]},
         "마이크론 (MU)": {"current_price": 132, "yearly_prices": [132, 110, 68, 55, 74]},
         "샌디스크/웨스턴디지털 (WDC)": {"current_price": 72, "yearly_prices": [72, 64, 42, 38, 52]}
     }
@@ -74,12 +77,11 @@ else:
         </h2>
     """, unsafe_allow_html=True)
 
-    # 🎰 아이디어 4: 오늘의 시발비용 무작위 추천 가이드 (청개구리 기믹)
     st.markdown("##### 🎲 오늘의 합법적 탕진 메뉴 추천 가이드")
     if st.button("🎁 오늘 스트레스 만빵인데 주식 살까? 아니면 지를까?"):
         random_items = [
-            "오늘은 반도체 장세가 흉흉합니다. 주식 사서 물릴 바엔 퇴근길에 마라탕에 꿔바로우(28,000원) 풀코스로 조지십시오.",
-            "엔비디아가 횡보 중입니다. 무리한 진입보다는 올리브영에 가서 평소 갖고 싶던 향수(45,000원)를 결제해 자산을 헷지하세요.",
+            "오늘은 장세가 흉흉합니다. 주식 사서 물릴 바엔 퇴근길에 마라탕에 꿔바로우(28,000원) 풀코스로 조지십시오.",
+            "미국 빅테크가 숨고르기 중입니다. 무리한 진입보다는 올리브영에 가서 평소 갖고 싶던 향수(45,000원)를 결제해 자산을 헷지하세요.",
             "국장 거래대금이 처참합니다. 네이버페이 켜고 지그재그에서 옷 한 벌(65,000원) 시원하게 지르는 게 멘탈 건강에 개이득입니다.",
             "오늘은 야수의 심장이 굳어가는 날. 배달 앱 켜서 엽떡에 허니콤보 세트(32,000원) 땡기고 꿀잠 자는 게 진정한 금융 치료입니다."
         ]
@@ -105,12 +107,15 @@ else:
             count = st.slider("📊 주간 평균 소비 빈도", 1, 14, 3)
         with col2:
             target_asset = st.selectbox(
-                "📈 연동할 목적 자산 (반도체/AI 벨트)", 
+                "📈 연동할 목적 자산 (국장 우량주 / 미장 빅테크)", 
                 [
                     "삼성전자 (005930.KS)", 
                     "SK하이닉스 (000660.KS)", 
                     "한미반도체 (042700.KS)",
+                    "삼성전기 (009150.KS)",
                     "엔비디아 (NVDA)", 
+                    "테슬라 (TSLA)",
+                    "구글 (GOOGL)",
                     "마이크론 (MU)", 
                     "샌디스크/웨스턴디지털 (WDC)"
                 ]
@@ -119,13 +124,12 @@ else:
             
         submitted = st.form_submit_button("✨ 제미나이 종합 분석 시뮬레이션 스타트 (Enter)")
 
-    # --- 데이터 연산 및 결과 출력 ---
     if submitted:
         price_dict = {
             "탕후루/마라탕 쿨타임 (1회 18,000원)": 18000,
             "스타벅스 바닐라라떼+디저트 (1회 11,000원)": 11000,
             "올리브영 세일 '구경만' 하기 (1회 45,000원)": 45000,
-            "불금 배달 엽떡+치킨 (1회 32,000원)": 32000,
+            "불금 배달 떡+치킨 (1회 32,000원)": 32000,
             "지그재그/W컨셉 충동 의류 매수 (1회 65,000원)": 65000,
             "한 달에 한 번 속눈썹/네일 정기권 (1회 55,000원)": 55000
         }
@@ -154,7 +158,7 @@ else:
         weekly_growth_rate = (total_return_rate) ** (1 / total_weeks) - 1 if total_return_rate > 0 else 0.0
         future_value = final_value * total_return_rate
 
-        st.write("")
+        st.write("---")
         st.markdown("<h3 style='color: #FFFFFF; font-size: 18px;'>📊 1. 과거 데이터 기반 실시간 정산</h3>", unsafe_allow_html=True)
         
         res_col1, res_col2, res_col3 = st.columns(3)
@@ -176,7 +180,6 @@ else:
         with fut_col2:
             st.markdown(f"""<div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;"><div style="font-size: 12px; color: #FFD700; font-weight: 500;">💰 미래 {years}년 뒤 최종 잔고 예측</div><div style="font-size: 24px; font-weight: 600; color: #FFD700; margin-top: 5px;">{int(future_value):,} 원</div></div>""", unsafe_allow_html=True)
 
-        # 🧪 아이디어 2: '이 돈이면 차라리...' 실물 자산 환산기 연산
         maratang_count = int(total_seed / 10000)
         dior_bag_count = round(total_seed / 9000000, 1)
         car_count = round(total_seed / 28000000, 1)
@@ -192,30 +195,88 @@ else:
             </div>
         """, unsafe_allow_html=True)
 
-        # 🪪 아이디어 1: SNS 박제용 흑우 등급 자산 인증서 카드 UI
+        # 🛠️ [초고도화] 4. 소비 항목 맞춤형 SNS 박제 카드 매핑 로직 완비
         st.write("")
-        st.markdown("<h3 style='color: #FFFFFF; font-size: 18px;'>🪪 4. SNS 박제용 흑우 등급 인증서 (캡처용)</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='color: #FFFFFF; font-size: 18px;'>🪪 4. 소비 맞춤형 흑우 등급 인증서 (캡처용)</h3>", unsafe_allow_html=True)
         
-        # 금액별 등급 나누기 기믹
-        if missed_money > 30000000:
-            cert_title = "🚨 천상계 기회 나눔 천사"
-            cert_desc = "엔비디아와 하이닉스 주주들의 하와이 비행기 날개를 본인 장바구니로 직접 결제해 주신 위대한 기부천사 임직원"
-            cert_bg = "linear-gradient(135deg, #4A154B 0%, #1A1D20 100%)"
-        elif missed_money > 0:
-            cert_title = "🛍️ 올리브영 VVIP 우량 흑우"
-            cert_desc = "네이버페이 6자리 비번을 광속으로 누르며 미래 자산을 야무지게 도파민과 교환한 이 시대의 진정한 감성 지출러"
-            cert_bg = "linear-gradient(135deg, #1C3D5A 0%, #1A1D20 100%)"
+        # 기본 등급 분기 (상승 자산 물림 / 떡상 자산 놓침)
+        if missed_money > 0:
+            # 수익률이 플러스인 자산을 놓쳤을 때 항목별 커스텀 멘트
+            custom_cards = {
+                "탕후루/마라탕 쿨타임 (1회 18,000원)": {
+                    "title": "🩸 혈당 폭발 마라탕 중독자",
+                    "desc": "마라 국물과 설탕 코팅에 영혼을 저당 잡아 혈당을 올리는 사이, 본인의 시드머니는 주식 시장에서 완전히 녹아내리게 방치한 위대한 푸드 파이터",
+                    "bg": "linear-gradient(135deg, #8B0000 0%, #1A1D20 100%)"
+                },
+                "스타벅스 바닐라라떼+디저트 (1회 11,000원)": {
+                    "title": "☕ 사이렌 오더 기부 천사",
+                    "desc": "매달 스타벅스 별사냥과 고카페인 시럽에 취해 살며 스타벅스 코리아 매출 상승에는 기여했으나 정작 본인 계좌는 공황 상태에 빠뜨린 주주",
+                    "bg": "linear-gradient(135deg, #124E3F 0%, #1A1D20 100%)"
+                },
+                "올리브영 세일 '구경만' 하기 (1회 45,000원)": {
+                    "title": "💄 올리브영 탕진 잼 마스터",
+                    "desc": "세일 문자만 오면 '구경만 해야지' 하고 들어가 틴트와 팩으로 바구니를 채우며 CJ 올리브영 시총 방어에 본인 시드를 갈아 넣은 VVIP 흑우",
+                    "bg": "linear-gradient(135deg, #5B7065 0%, #1A1D20 100%)"
+                },
+                "불금 배달 엽떡+치킨 (1회 32,000원)": {
+                    "title": "🐔 배달 앱 다이아몬드 등급",
+                    "desc": "금요일 밤의 고독과 스트레스를 캡사이신과 튀김 옷으로 위로하느라, 통장에 억 단위 자산이 쌓일 기회를 아주 야무지게 씹어 삼키신 야식 마스터",
+                    "bg": "linear-gradient(135deg, #4A154B 0%, #1A1D20 100%)"
+                },
+                "지그재그/W컨셉 충동 의류 매수 (1회 65,000원)": {
+                    "title": "👗 새벽 배송 폰결제 야수",
+                    "desc": "침대에 누워 흐린 눈으로 옷 구경하다 네이버페이 6자리를 광속으로 태우며, 방구석 드레스룸은 채웠으나 자산 포트폴리오는 전라로 만든 패셔니스타",
+                    "bg": "linear-gradient(135deg, #3A225D 0%, #1A1D20 100%)"
+                },
+                "한 달에 한 번 속눈썹/네일 정기권 (1회 55,000원)": {
+                    "title": "💅 손끝 발끝 풀소유 영애",
+                    "desc": "손톱 위에 파츠를 올리고 눈썹을 바짝 끌어올려 비주얼 품격은 유지했으나, 정작 본인 자산 성장률은 바닥에 바짝 붙여버린 관리의 대가",
+                    "bg": "linear-gradient(135deg, #1C3D5A 0%, #1A1D20 100%)"
+                }
+            }
+            card_info = custom_cards[habit]
         else:
-            cert_title = "🛡️ 자산 헤징의 신 (인생 승리자)"
-            cert_desc = "처참한 반도체 고점 사이클을 기가 막힌 엽떡/마라탕 지출로 우회하여 원금 까먹을 위기를 방어한 위대한 월급방어 대가"
-            cert_bg = "linear-gradient(135deg, #1B4D3E 0%, #1A1D20 100%)"
+            # 주식이 폭락해서 오히려 이득을 보았을 때 항목별 대찬사 멘트
+            custom_cards = {
+                "탕후루/마라탕 쿨타임 (1회 18,000원)": {
+                    "title": "🛡️ 마라탕 금융 치료 연맹",
+                    "desc": "처참하게 무너져 내리는 주식 시장을 예견하고 주식 대신 마라탕을 섭취함으로써 완벽한 원금 보존 및 도파민 해징에 성공한 천재 트레이더",
+                    "bg": "linear-gradient(135deg, #1B4D3E 0%, #1A1D20 100%)"
+                },
+                "스타벅스 바닐라라떼+디저트 (1회 11,000원)": {
+                    "title": "🛡️ 바닐라 시럽 자산 헤징 장인",
+                    "desc": "주식 계좌가 녹아내릴 고점 폭탄을 완벽하게 피해 매달 스타벅스 달콤한 라떼로 본인 멘탈을 우량하게 리프레시한 리스크 관리 책임자",
+                    "bg": "linear-gradient(135deg, #1B4D3E 0%, #1A1D20 100%)"
+                },
+                "올리브영 세일 '구경만' 하기 (1회 45,000원)": {
+                    "title": "🛡️ 올리브영 메이크업 생존자",
+                    "desc": "주식 차트 파란불에 스트레스받아 피부 뒤집어질 뻔한 위기를 올영 세일 꿀템 쇼핑으로 조기 진화한 명예 자산 방어 사령관",
+                    "bg": "linear-gradient(135deg, #1B4D3E 0%, #1A1D20 100%)"
+                },
+                "불금 배달 엽떡+치킨 (1회 32,000원)": {
+                    "title": "🛡️ 엽떡 치킨 디펜스 마스터",
+                    "desc": "주식 시장에 시드를 던졌다면 마이너스 계좌를 보며 밤새 통곡했을 것을 배달 엽떡으로 배를 채우며 평화로운 불금을 사수한 지혜의 아이콘",
+                    "bg": "linear-gradient(135deg, #1B4D3E 0%, #1A1D20 100%)"
+                },
+                "지그재그/W컨셉 충동 의류 매수 (1회 65,000원)": {
+                    "title": "🛡️ 지그재그 풀 레이어 헷지왕",
+                    "desc": "주가가 바닥을 기는 하락장에 자금을 묶는 대신, 예쁜 옷을 사 입어 인간 지표로서의 삶의 질을 극대화한 영리한 자산 배분 전략가",
+                    "bg": "linear-gradient(135deg, #1B4D3E 0%, #1A1D20 100%)"
+                },
+                "한 달에 한 번 속눈썹/네일 정기권 (1회 55,000원)": {
+                    "title": "🛡️ 네일 파츠 자산 수호 영애",
+                    "desc": "폭락장 주식에 투자했다면 멘탈과 손톱이 다 부러졌을 텐데, 뷰티 정기권 결제로 나 자신을 가꿔 강제 자산 방어를 실현한 진정한 승리자",
+                    "bg": "linear-gradient(135deg, #1B4D3E 0%, #1A1D20 100%)"
+                }
+            }
+            card_info = custom_cards[habit]
 
         st.markdown(f"""
-            <div style="background: {cert_bg}; border: 2px dashed #FFFFFF; padding: 25px; border-radius: 12px; text-align: center; color: #FFFFFF; font-family: sans-serif; max-width: 500px; margin: 0 auto;">
+            <div style="background: {card_info['bg']}; border: 2px dashed #FFFFFF; padding: 25px; border-radius: 12px; text-align: center; color: #FFFFFF; font-family: sans-serif; max-width: 500px; margin: 0 auto;">
                 <span style="font-size: 12px; letter-spacing: 2px; color: #AAADB0;">OFFICIAL CERTIFICATE</span>
-                <h2 style="color: #FFFFFF; margin: 10px 0; font-size: 24px;">{cert_title}</h2>
+                <h2 style="color: #FFFFFF; margin: 10px 0; font-size: 24px;">{card_info['title']}</h2>
                 <div style="border-top: 1px solid #3C4043; border-bottom: 1px solid #3C4043; padding: 15px 0; margin: 15px 0; font-size: 13.5px; line-height: 1.6; color: #E8EAED;">
-                    {cert_desc}<br><br>
+                    {card_info['desc']}<br><br>
                     <b>최종 누적 매몰 자산:</b> {int(total_seed):,} 원<br>
                     <b>미래 상실 자산 예측:</b> {int(future_value):,} 원
                 </div>
@@ -246,19 +307,16 @@ else:
                 </div>
             """, unsafe_allow_html=True)
 
-    # --- ⚔️ 아이디어 3: 실시간 월급루팡 익명 한탄 한줄 방명록 섹션 (맨 아래 배치) ---
+    # --- ⚔️ 익명 한탄 한줄 방명록 섹션 ---
     st.write("---")
     st.markdown("<h3 style='color: #FFFFFF; font-size: 18px;'>💬 5. 실시간 월급루팡 익명 한탄방</h3>", unsafe_allow_html=True)
     
-    # 댓글 입력 창 구성
     with st.container():
-        user_comment = st.text_input("💬 흑우로서 한마디 남기기 (Enter 입력 시 등록)", placeholder="예: 방금 한미반도체 돌려보고 기절함")
+        user_comment = st.text_input("💬 흑우로서 한마디 남기기 (Enter 입력 시 등록)", placeholder="예: 구글 돌려봤는데 내 유튜브 프리미엄 값 어딨냐..")
         if user_comment:
-            # 새 댓글을 리스트 맨 위에 추가
             st.session_state["chat_log"].insert(0, f"익명루팡_{random.randint(100,999)}: {user_comment}")
             st.rerun()
 
-        # 댓글 리스트 출력 박스 연출 (흰색 가독성 글씨)
         chat_box_html = "<div style='background-color: #1E1F20; border: 1px solid #3C4043; padding: 15px; border-radius: 8px; max-height: 200px; overflow-y: auto; color: #FFFFFF; font-family: monospace; font-size: 13px; line-height: 1.6;'>"
         for log in st.session_state["chat_log"]:
             chat_box_html += f"<div>{log}</div>"
