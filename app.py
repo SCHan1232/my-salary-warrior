@@ -3,7 +3,7 @@ import streamlit.components.v1 as components
 import datetime
 import random
 
-# 1. 제미나이 다크모드 기반 최적화 설정
+# 1. 껄무새 다크모드 기반 최적화 설정
 st.set_page_config(
     page_title="✨ 껄무새 - 2030 필수 자산 케어 v17", 
     page_icon="🦜",
@@ -77,7 +77,6 @@ else:
         "샌디스크/웨스턴디지털 (WDC)": {"current_price": 72, "yearly_prices": [72, 64, 42, 39, 52]} 
     }
 
-    # 껄무새 무지개빛 그라데이션 상단 로고
     st.markdown("""
         <div style="margin-bottom: 5px;">
             <span style="font-size: 38px; font-weight: 800; background: linear-gradient(45deg, #4285F4, #9B51E0, #E91E63); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px;">
@@ -86,7 +85,6 @@ else:
         </div>
     """, unsafe_allow_html=True)
 
-    # 상단 메뉴 탭 분리
     tab1, tab2, tab3 = st.tabs(["📊 자산 타임머신", "🔮 껄무새 사주도사", "⚔️ 주주총회 밸런스"])
 
     # ==================== TAB 1: 메인 시뮬레이터 탭 ====================
@@ -142,13 +140,31 @@ else:
                 display_now = f"{current_price:,} 원" if not is_foreign else f"${current_price:,} (원화 약 {int(current_price*exchange_rate):,} 원)"
                 st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 15px; border-radius: 8px; background-color: #1A1D20;"><div style="font-size: 11px; color: #81C995;">✨ 현재 실시간 시세</div><div style="font-size: 17px; font-weight: 600; color: #81C995; margin-top: 5px;">{display_now}</div><div style="font-size: 11px; color: #FFFFFF; margin-top: 3px; font-weight: bold;">📊 {max_idx}년 간 순수 누적 수익률: {total_asset_growth:+.2f}%</div></div>""", unsafe_allow_html=True)
 
-            # 🛠️ [초고도화 튜닝] 3. 인스타 스토리 맞춤형 '인싸 감성 스퀘어 캡처 카드' UI 
+            # 1. 과거 데이터 기반 실시간 정산
+            st.write("")
+            st.markdown("<h3 style='color: #FFFFFF; font-size: 17px;'>📊 1. 과거 데이터 기반 실시간 정산</h3>", unsafe_allow_html=True)
+            res_col1, res_col2, res_col3 = st.columns(3)
+            with res_col1: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: #AAADB0; font-weight: 500;">🪙 총 지출 매몰 원금</div><div style="font-size: 22px; font-weight: 600; color: #FFFFFF; margin-top: 5px;">{int(total_seed):,} 원</div></div>""", unsafe_allow_html=True)
+            with res_col2: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: #81C995; font-weight: 500;">📈 현재 자산 가치 (오늘)</div><div style="font-size: 22px; font-weight: 600; color: #81C995; margin-top: 5px;">{int(final_value):,} 원</div></div>""", unsafe_allow_html=True)
+            with res_col3:
+                card_color = "#F28B82" if missed_money > 0 else "#8AB4F8"
+                status_text = "🚨 기회상실 순손실액" if missed_money > 0 else "🛡️ 리스크 최종 방어액"
+                st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: {card_color}; font-weight: 500;">{status_text}</div><div style="font-size: 22px; font-weight: 600; color: {card_color}; margin-top: 5px;">{"+" if missed_money > 0 else ""}{int(missed_money):,} 원</div></div>""", unsafe_allow_html=True)
+
+            # 2. 미래 퀀텀점프 예측
+            st.write("")
+            st.markdown(f"<h3 style='color: #FFFFFF; font-size: 17px;'>🔮 2. 미래 {years}년 뒤 자산 행복회로 퀀텀점프 예측</h3>", unsafe_allow_html=True)
+            fut_col1, fut_col2 = st.columns(2)
+            with fut_col1: st.markdown(f"""<div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;"><div style="font-size: 12px; color: #D6BCFA; font-weight: 500;">🚀 미래 엔진에 투영된 과거 에너모멘텀</div><div style="font-size: 24px; font-weight: 600; color: #D6BCFA; margin-top: 5px;">{total_asset_growth:+.2f} % 직진 반영</div></div>""", unsafe_allow_html=True)
+            with fut_col2: st.markdown(f"""<div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;"><div style="font-size: 12px; color: #FFD700; font-weight: 500;">💰 미래 {years}년 뒤 최종 잔고 예측</div><div style="font-size: 24px; font-weight: 600; color: #FFD700; margin-top: 5px;">{int(future_value):,} 원</div></div>""", unsafe_allow_html=True)
+
+            # 📸 3. 인스타 스토리 맞춤형 '인싸 감성 스퀘어 캡처 카드' UI (오타 완치 부위!)
             st.write("")
             st.markdown("<h3 style='color: #FFFFFF; font-size: 17px;'>📸 1. 인스타 스토리 박제용 캡처 카드</h3>", unsafe_allow_html=True)
             habit_clean_name = habit.split(" (")[0]
             asset_clean_name = target_asset.split(" (")[0]
             
-            # 인스타 힙스터들이 좋아하는 반투명 그라데이션 카드 보더 디자인
+            # unsafe_allow_html=True 옵션을 뒤에 확실히 붙여서 제대로 렌더링되게 만들었습니다!
             st.markdown(f"""
                 <div style="background: linear-gradient(135deg, #121212 0%, #1A1A2E 100%); border: 3px solid #9B51E0; padding: 30px; border-radius: 20px; max-width: 440px; margin: 0 auto; color: #FFFFFF; box-shadow: 0 10px 30px rgba(155,81,224,0.3); text-align: center; aspect-ratio: 1/1; display: flex; flex-direction: column; justify-content: center;">
                     <span style="font-size: 11px; letter-spacing: 3px; color: #9B51E0; font-weight: bold; text-transform: uppercase; margin-bottom: 15px;">📊 MY SHIBAL COST REPORT</span>
@@ -168,7 +184,7 @@ else:
                 </div>
             """, unsafe_allow_html=True)
 
-            # 4. 소비 맞춤형 흑우 등급 인증서 (인스타 하단 서브 카드)
+            # 4. 소비 맞춤형 흑우 등급 인증서
             st.write("")
             if missed_money > 0:
                 custom_cards = {
@@ -203,12 +219,11 @@ else:
         chat_box_html += "</div>"
         st.markdown(chat_box_html, unsafe_allow_html=True)
 
-    # ==================== 🛠️ TAB 2: 초정밀 사주 명리 껄무새 도사 탭 ====================
+    # ==================== TAB 2: 사주 명리 껄무새 도사 탭 ====================
     with tab2:
         st.markdown("### 🔮 생년월일 명리 기반 주식 매수 타이밍 진단")
         st.write("8자리 생년월일 기운을 오행으로 분해하여, 질문하신 주식 종목의 진입 적절성을 사주학적으로 감정합니다.")
         
-        # 입력 인터페이스 고도화
         user_birth = st.text_input("🎂 생년월일 8자리를 입력하세요 (예: 19961025)", max_chars=8, placeholder="19950714")
         stock_question = st.text_input("💬 주식 질문을 던지세요", placeholder="예: 삼성전자 오늘 사도 될까요?")
         
@@ -218,27 +233,23 @@ else:
             elif not stock_question:
                 st.error("🚨 어떤 주식을 살지 질문을 적어야 도사님이 일침을 주지!")
             else:
-                # 입력된 생년월일 숫자를 기반으로 유저 고유의 사주 인덱스 시드 생성 (완벽한 커스텀 경험)
                 seed_num = sum([int(char) for char in user_birth]) % 4
-                
-                # 주식 키워드 파싱
                 clean_stock = stock_question.replace("사도 될까요", "").replace("사도 됨", "").replace("지금", "").strip()
                 
                 saju_responses = [
                     f"🔮 점괘 결과: [🔥 화(火)기운 과다 / 편재살 대치]\n\n귀하의 생년월일 기운상 오늘 손가락에 급격한 충동 매수 마귀가 꼈습니다. '{clean_stock}'(으)로 일확천금을 노리려는 야수의 심장은 고점에 처물리기 딱 좋은 운세입니다. 관재구설과 계좌 소멸 살이 보입니다. 오늘은 매수 버튼에서 손을 때고 조용히 자중하십시오.",
                     f"🔮 점괘 결과: [🌱 목(木)기운 보존 / 정재 귀인 합류]\n\n사주에 따박따박 창고를 채우는 財庫(재고) 귀인의 기운이 가득합니다. '{clean_stock}'을(를) 오늘 분할 적립식으로 진입하는 것은 장기적으로 마라탕 그릇을 황금알로 바꾸는 신의 한 수가 될 상입니다. 다만 일시적 횡보는 인내하셔야 문이 열립니다.",
-                    f"🔮 점괘 결과: [🪨 토(土)기운 정체 / 겁재살 강세]\n\n지갑에 구멍이 뚫려 재물이 강탈당하는 겁재의 살이 도사리고 있습니다. 지금 흥분해서 '{clean_stock}' 매수 주문을 넣으면, 기관과 외국인 세력에게 귀하의 소중한 월급 루팡 시드를 고스란히 헌납하는 형국이 됩니다. 금융 치료를 당하기 싫다면 오늘 밤 야식이나 배달 시켜 드시는 게 리스크 헷지입니다.",
+                    f"🔮 점괘 결과: [🪨 토(土)기운 정체 / 겁재살 강세]\n\n지갑에 구멍이 뚫려 재물이 강탈당하는 겁재의 살이 도사리고 있습니다. 지금 흥분해서 '{clean_stock}' 매수 주문을 넣으면, 기관 및 외국인 세력에게 귀하의 소중한 월급 루팡 시드를 고스란히 헌납하는 형국이 됩니다. 금융 치료를 당하기 싫다면 오늘 밤 야식이나 배달 시켜 드시는 게 리스크 헷지입니다.",
                     f"🔮 점괘 결과: [🌊 수(水)기운 유동 / 식신생재 활성화]\n\n재물이 샘물처럼 흘러 들어와 자산 전략과 합을 이루는 대길의 기운입니다. 의심을 거두고 '{clean_stock}'에 진입하는 것은 도파민을 가치 있는 자산으로 치환하는 훌륭한 액막이가 될 것입니다. 과감하게 야수의 본능을 깨워 시뮬레이션을 밀어붙이십시오."
                 ]
                 st.info(saju_responses[seed_num])
 
-    # ==================== 🛠️ TAB 3: 주식 결합형 자산 파괴 밸런스 게임 탭 ====================
+    # ==================== TAB 3: 주식 결합형 자산 파괴 밸런스 게임 탭 ====================
     with tab3:
         st.markdown("### ⚔️ 주주총회 자산 파괴 밸런스 게임")
         st.write("2030 영애·대리들의 계좌와 멘탈을 가장 완벽하게 도려내는 극한의 밸런스 매치업입니다.")
         st.write("**Q. 평생 동안 다음 중 딱 하나의 상황만 선택하여 살아갈 수 있다면?**")
         
-        # 주식형 초강력 매치업 구성
         col_v1, col_v2 = st.columns(2)
         with col_v1:
             if st.button("🅰️ 평생 배달 엽떡+치킨+스벅 싹 다 끊고, 그 돈 전액 엔비디아 무지성 적립하기", key="btn_vote_a"):
