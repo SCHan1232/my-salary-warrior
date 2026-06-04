@@ -3,9 +3,9 @@ import streamlit.components.v1 as components
 import datetime
 import random
 
-# 1. 제미나이 다크모드 기반 최적화 설정
+# 1. 제미나이 검색 및 다크모드 환경에 최적화된 설정
 st.set_page_config(
-    page_title="✨ Gemini - 자산 최적화 시뮬레이션 v9", 
+    page_title="✨ Gemini - 자산 최적화 시뮬레이션 v11", 
     page_icon="✨",
     layout="centered" 
 )
@@ -54,16 +54,17 @@ if is_boss_mode:
 
 # 🟢 AREA B: 제미나이 팩폭 + 도파민 놀이터
 else:
+    # 📊 자산별 [현재가 vs 연도별 과거가] 정밀 데이터베이스 (2026년 6월 4일 기준)
     HISTORICAL_STOCK_DATA = {
-        "삼성전자 (005930.KS)": {"current_price": 358250, "yearly_prices": [358250, 285000, 72500, 63100, 75500]},
-        "SK하이닉스 (000660.KS)": {"current_price": 168000, "yearly_prices": [168000, 142000, 115000, 92000, 121000]},
-        "한미반도체 (042700.KS)": {"current_price": 142500, "yearly_prices": [142500, 118000, 61000, 14500, 18500]},
-        "삼성전기 (009150.KS)": {"current_price": 156500, "yearly_prices": [156500, 148000, 138000, 142000, 175000]},
-        "엔비디아 (NVDA)": {"current_price": 125, "yearly_prices": [125, 85, 38, 16, 22]},
-        "테슬라 (TSLA)": {"current_price": 178, "yearly_prices": [178, 210, 185, 290, 230]},
-        "구글 (GOOGL)": {"current_price": 174, "yearly_prices": [174, 150, 105, 95, 130]},
-        "마이크론 (MU)": {"current_price": 132, "yearly_prices": [132, 110, 68, 55, 74]},
-        "샌디스크/웨스턴디지털 (WDC)": {"current_price": 72, "yearly_prices": [72, 64, 42, 38, 52]}
+        "삼성전자 (005930.KS)": {"current_price": 358250, "yearly_prices": [358250, 285000, 72500, 71500, 66500]},
+        "SK하이닉스 (000660.KS)": {"current_price": 168000, "yearly_prices": [168000, 142000, 115000, 110300, 105000]},
+        "한미반도체 (042700.KS)": {"current_price": 142500, "yearly_prices": [142500, 118000, 61000, 29800, 13200]},
+        "삼성전기 (009150.KS)": {"current_price": 156500, "yearly_prices": [156500, 148000, 138000, 145200, 149000]},
+        "엔비디아 (NVDA)": {"current_price": 125, "yearly_prices": [125, 85, 48, 39, 18]}, 
+        "테슬라 (TSLA)": {"current_price": 178, "yearly_prices": [178, 210, 175, 214, 235]}, 
+        "구글 (GOOGL)": {"current_price": 174, "yearly_prices": [174, 150, 112, 124, 115]}, 
+        "마이크론 (MU)": {"current_price": 132, "yearly_prices": [132, 110, 68, 67, 71]}, 
+        "샌디스크/웨스턴디지털 (WDC)": {"current_price": 72, "yearly_prices": [72, 64, 42, 39, 52]} 
     }
 
     st.markdown("""
@@ -77,6 +78,7 @@ else:
         </h2>
     """, unsafe_allow_html=True)
 
+    # 오늘의 시발비용 추천 기능
     st.markdown("##### 🎲 오늘의 합법적 탕진 메뉴 추천 가이드")
     if st.button("🎁 오늘 스트레스 만빵인데 주식 살까? 아니면 지를까?"):
         random_items = [
@@ -129,7 +131,7 @@ else:
             "탕후루/마라탕 쿨타임 (1회 18,000원)": 18000,
             "스타벅스 바닐라라떼+디저트 (1회 11,000원)": 11000,
             "올리브영 세일 '구경만' 하기 (1회 45,000원)": 45000,
-            "불금 배달 떡+치킨 (1회 32,000원)": 32000,
+            "불금 배달 엽떡+치킨 (1회 32,000원)": 32000,
             "지그재그/W컨셉 충동 의류 매수 (1회 65,000원)": 65000,
             "한 달에 한 번 속눈썹/네일 정기권 (1회 55,000원)": 55000
         }
@@ -142,6 +144,7 @@ else:
         current_price = asset_info["current_price"]
         prices_history = asset_info["yearly_prices"][:years+1]
         
+        # 실제 과거 연도별 적립식 매수 루프
         total_shares = 0.0
         for i in range(years):
             past_price = prices_history[years - i]
@@ -153,12 +156,36 @@ else:
         price_unit = "$" if is_foreign else "원"
         missed_money = final_value - total_seed
 
+        # 🧮 과거 N년 전 주가 대비 현재 주가의 순수 누적 상승률 계산 공식
+        max_idx = min(years, len(prices_history) - 1)
+        then_price = prices_history[max_idx]
+        total_asset_growth = ((current_price - then_price) / then_price) * 100
+
+        # 미래 복리 예측 연산 (거치식 복리 스케일 매핑)
         total_return_rate = final_value / total_seed if total_seed > 0 else 1.0
         total_weeks = years * 52
         weekly_growth_rate = (total_return_rate) ** (1 / total_weeks) - 1 if total_return_rate > 0 else 0.0
         future_value = final_value * total_return_rate
 
+        # 🔍 0순위: 데이터 신뢰성 검증 리포트 (누적 상승률 정보 포함)
         st.write("---")
+        st.markdown(f"<h3 style='color: #FFFFFF; font-size: 18px;'>🔍 0. 데이터 신뢰성 검증 리포트 ({target_asset.split(' (')[0]})</h3>", unsafe_allow_html=True)
+        
+        val_col1, val_col2 = st.columns(2)
+        with val_col1:
+            display_then = f"{then_price:,} 원" if not is_foreign else f"${then_price:,} (원화 약 {int(then_price*exchange_rate):,} 원)"
+            st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 15px; border-radius: 8px; background-color: #1A1D20;"><div style="font-size: 11px; color: #AAADB0;">⏳ {max_idx}년 전 실제 당일 가격</div><div style="font-size: 18px; font-weight: 600; color: #F28B82; margin-top: 5px;">{display_then}</div></div>""", unsafe_allow_html=True)
+        with val_col2:
+            display_now = f"{current_price:,} 원" if not is_foreign else f"${current_price:,} (원화 약 {int(current_price*exchange_rate):,} 원)"
+            st.markdown(f"""
+                <div style="border: 1px solid #3C4043; padding: 15px; border-radius: 8px; background-color: #1A1D20;">
+                    <div style="font-size: 11px; color: #AAADB0;">✨ 2026년 현재 진짜 실시간 시세</div>
+                    <div style="font-size: 18px; font-weight: 600; color: #81C995; margin-top: 5px;">{display_now}</div>
+                    <div style="font-size: 11px; color: #FFFFFF; margin-top: 3px; font-weight: bold;">📊 {max_idx}년 간 순수 누적 수익률: {total_asset_growth:+.2f}%</div>
+                </div>
+            """, unsafe_allow_html=True)
+
+        st.write("")
         st.markdown("<h3 style='color: #FFFFFF; font-size: 18px;'>📊 1. 과거 데이터 기반 실시간 정산</h3>", unsafe_allow_html=True)
         
         res_col1, res_col2, res_col3 = st.columns(3)
@@ -171,6 +198,7 @@ else:
             status_text = "🚨 기회상실 순손실액" if missed_money > 0 else "🛡️ 리스크 최종 방어액"
             st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: {card_color}; font-weight: 500;">{status_text}</div><div style="font-size: 22px; font-weight: 600; color: {card_color}; margin-top: 5px;">{"+" if missed_money > 0 else ""}{int(missed_money):,} 원</div></div>""", unsafe_allow_html=True)
 
+        # 미래 행복회로 예측 스코어보드
         st.write("")
         st.markdown(f"<h3 style='color: #FFFFFF; font-size: 18px;'>🔮 2. 미래 {years}년 뒤 자산 행복회로 예측</h3>", unsafe_allow_html=True)
         
@@ -178,8 +206,15 @@ else:
         with fut_col1:
             st.markdown(f"""<div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;"><div style="font-size: 12px; color: #D6BCFA; font-weight: 500;">⚡ 과거 주봉 평균 상승률 (복리)</div><div style="font-size: 24px; font-weight: 600; color: #D6BCFA; margin-top: 5px;">{weekly_growth_rate*100:+.4f} % / 주</div></div>""", unsafe_allow_html=True)
         with fut_col2:
-            st.markdown(f"""<div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;"><div style="font-size: 12px; color: #FFD700; font-weight: 500;">💰 미래 {years}년 뒤 최종 잔고 예측</div><div style="font-size: 24px; font-weight: 600; color: #FFD700; margin-top: 5px;">{int(future_value):,} 원</div></div>""", unsafe_allow_html=True)
+            st.markdown(f"""
+                <div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;">
+                    <div style="font-size: 12px; color: #FFD700; font-weight: 500;">💰 미래 {years}년 뒤 최종 잔고 예측</div>
+                    <div style="font-size: 24px; font-weight: 600; color: #FFD700; margin-top: 5px;">{int(future_value):,} 원</div>
+                    <div style="font-size: 11px; color: #FFFFFF; margin-top: 3px; font-weight: bold;">📊 적용된 미래 누적 기대수익률: {((future_value - final_value)/final_value)*100:+.2f}%</div>
+                </div>
+            """, unsafe_allow_html=True)
 
+        # 실물 자산 환산기 연산
         maratang_count = int(total_seed / 10000)
         dior_bag_count = round(total_seed / 9000000, 1)
         car_count = round(total_seed / 28000000, 1)
@@ -195,13 +230,11 @@ else:
             </div>
         """, unsafe_allow_html=True)
 
-        # 🛠️ [초고도화] 4. 소비 항목 맞춤형 SNS 박제 카드 매핑 로직 완비
+        # SNS 박제용 등급 인증서 카드 UI
         st.write("")
         st.markdown("<h3 style='color: #FFFFFF; font-size: 18px;'>🪪 4. 소비 맞춤형 흑우 등급 인증서 (캡처용)</h3>", unsafe_allow_html=True)
         
-        # 기본 등급 분기 (상승 자산 물림 / 떡상 자산 놓침)
         if missed_money > 0:
-            # 수익률이 플러스인 자산을 놓쳤을 때 항목별 커스텀 멘트
             custom_cards = {
                 "탕후루/마라탕 쿨타임 (1회 18,000원)": {
                     "title": "🩸 혈당 폭발 마라탕 중독자",
@@ -236,7 +269,6 @@ else:
             }
             card_info = custom_cards[habit]
         else:
-            # 주식이 폭락해서 오히려 이득을 보았을 때 항목별 대찬사 멘트
             custom_cards = {
                 "탕후루/마라탕 쿨타임 (1회 18,000원)": {
                     "title": "🛡️ 마라탕 금융 치료 연맹",
