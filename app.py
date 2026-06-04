@@ -6,7 +6,7 @@ import yfinance as yf
 
 # 1. 껄무새 다크모드 기반 최적화 설정
 st.set_page_config(
-    page_title="✨ 껄무새 - 2030 필수 자산 케어 v34", 
+    page_title="✨ 껄무새 - 2030 필수 자산 케어 v35", 
     page_icon="🦜",
     layout="wide"
 )
@@ -32,7 +32,7 @@ js_panic_script = """
 components.html(js_panic_script, height=0, width=0)
 is_boss_mode = st.query_params.get("boss_mode", "false") == "true"
 
-# 🛠️ 세션 데이터 구조 안전 보어선 가동
+# 세션 데이터 포맷 스위칭 및 강제 방어 로직
 balance_games_pool = [
     {"question": "평생 배달 야식+스벅 끊고 엔비디아 풀매수 vs 고점 물린 삼전 원금 강제 회복", "A": 142, "B": 98},
     {"question": "매달 올영 구경 전면 금지 vs 테슬라 고점에 물려서 3년 강제 존버", "A": 85, "B": 132},
@@ -56,7 +56,7 @@ if "chat_messages" not in st.session_state:
     st.session_state["chat_messages"] = [
         {"role": "user", "name": "익명루팡_724", "text": "마라탕이랑 스벅 끊었으면 이미 해외여행 비즈니스 탔음.. 😭"}, 
         {"role": "user", "name": "서학개미_119", "text": "차트 탭 열리니까 내가 날려먹은 상승 랠리가 한눈에 보여서 더 피눈물 남"},
-        {"role": "user", "name": "껄껄새_002", "text": "테슬라 3년 전에 샀어야 했는데 껄껄껄... 지금이라도 타?"}
+        {"role": "user", "name": "껄껄새_002", "text": "오른쪽에 껄무새 모이주기 버튼 존귀탱이네 ㅋㅋㅋ 지갑 열린다"}
     ]
 if "suggested_stocks" not in st.session_state:
     st.session_state["suggested_stocks"] = [
@@ -113,7 +113,7 @@ else:
         </div>
     """, unsafe_allow_html=True)
 
-    # 🛠️ [기능 1] 실시간 마켓 무빙 티커 전광판 바 연동
+    # 실시간 마켓 무빙 티커 전광판 바 연동
     @st.cache_data(ttl=600)
     def fetch_ticker_bar():
         ticker_strings = []
@@ -173,12 +173,11 @@ else:
     """, unsafe_allow_html=True)
     random.seed()
 
-    # 좌우 레이아웃 (2.5 대 0.8)
+    # 좌우 레이아웃
     main_layout, chat_layout = st.columns([2.5, 0.8], gap="medium")
 
     # ==================== [LEFT SIDE] 메인 기능 영역 ====================
     with main_layout:
-        # 차트 시각화실을 포함한 5대 대시보드 탭 체제 출범!
         tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 자산 타임머신", "🔮 껄무새 사주도사", "⚔️ 주주총회 밸런스", "🧠 포모 차단기", "📈 차트 시각화실"])
 
         # TAB 1: 타임머신
@@ -287,7 +286,7 @@ else:
                             "탕후루/마라탕 수명 단축 쿨타임 (1회 18,000원)": {"title": "🩸 혈당 폭발 마라탕 중독자", "desc": "남들 반도체 지수 호황 누릴 때 혼자 붉은 고추기름 국물과 설탕 시럽 코팅에 영혼을 저당 잡힌 돼지 주주님.\n입안의 일시적인 사치와 위장 평수를 넓힌 대가로 통장 잔고의 미래 척추는 완벽하게 내려앉아 아작이 났습니다.\n미래에 포르쉐 핸들 대신 마라탕 숟가락 잡고 껄껄대고 있을 자신에게 소견서를 제출해 보세요."},
                             "스타벅스 바닐라라떼+디저트 (1회 11,000원)": {"title": "☕ 사이렌 오더 명예 의장", "desc": "매달 스타벅스 프리미엄 별 사냥과 고농축 당류에 취해 살며 남의 나라 커피 기업 시총 방어에 본인 급여를 장렬히 갈아 넣으신 호구.\n본인 계좌는 영하권 한파 주의보가 내렸는데 아침마다 당당하게 닉네임 불리며 종이컵 받아오는 모습이 참 눈물겹습니다.\n그 컵홀더 탑처럼 모아두면 미래에 강남 아파트 전세 계약서로 바꿔 준답니까?"},
                             "올리브영 세일 '구경만' 가기 (1회 45,000원)": {"title": "💄 올영 시총 수호대 대장", "desc": "세일 알림 문자만 오면 눈이 뒤집혀서 '구경만 해야지' 하고 기어 들어가 장바구니 가득 팩과 틴트를 쟁여 나오는 뇌 빼놓은 영애.\n피부는 일시적으로 매끈해졌을지 몰라도, 귀하의 투자 포트폴리오는 알거지 상태로 굶주려 뼈만 남은 채 비명을 지르고 있습니다.\n미래에 화장품 바닥까지 다 긁어 바르고 거울 보며 서럽게 울고 계실 모습이 참으로 든든합니다."},
-                            "불금 배달 떡볶이+치킨 세트 (1회 32,000원)": {"title": "🐔 배달 앱 다이아몬드 VVIP", "desc": "금요일 스트레스 핑계 대며 캡사이신และ 기름진 닭 튀김으로 위장을 혹사하는 사이, 통장에 우량 자산이 꽂힐 기회는 야무지게 소화되어 사라졌습니다.\n라이더 영웅들에게 배달 팁 쾌척하며 자선사업 하시는 동안 귀하의 노후 자금은 완벽하게 멸망의 길로 직진했습니다.\n남은 치킨 무 국물이나 마시며 회사 모니터 앞에서 시원하게 껄껄 대십시오."},
+                            "불금 배달 떡볶이+치킨 세트 (1회 32,000원)": {"title": "🐔 배달 앱 다이아몬드 VVIP", "desc": "금요일 스트레스 핑계 대며 캡사이신과 기름진 닭 튀김으로 위장을 혹사하는 사이, 통장에 우량 자산이 꽂힐 기회는 야무지게 소화되어 사라졌습니다.\n라이더 영웅들에게 배달 팁 쾌척하며 자선사업 하시는 동안 귀하의 노후 자금은 완벽하게 멸망의 길로 직진했습니다.\n남은 치킨 무 국물이나 마시며 회사 모니터 앞에서 시원하게 껄껄 대십시오."},
                             "지그재그/W컨셉 충동 의류 매수 (1회 65,000원)": {"title": "👗 방구석 드레스룸 독재자", "desc": "침대에 누워 흐린 눈으로 옷 구경하다 네이버페이 지문 인식 광속으로 태우며 택배 박스 뜯는 도파민에 중독된 중꺾소 패셔니스타.\n방구석 옷장은 미어터져서 문이 안 닫히지만 주식 계좌는 알거지 상태로 처참하게 방치되어 산소호흡기를 달고 있습니다.\n미래에 그 옷 레이어드로 수십 벌 겹쳐 입고 한겨울 서울역 광장에서 노숙이라도 하실 기세라 참 보기 좋습니다."},
                             "매달 속눈썹 펌/네일 정기권 (1회 55,000원)": {"title": "💅 손끝 발끝 풀소유 영애", "desc": "손톱 위에 화려한 파츠 올리고 속눈썹 바짝 바비인형처럼 끌어올려 겉치레 품격은 채웠으나 정작 자산 성장률은 바닥에 매친 모순의 극치.\n키보드 두드릴 때 손가락에서 영롱한 빛이 나니 월급이 삭제되는 고통도 깨끗이 잊으셨나 봅니다.\n그 반짝이는 파츠 떼어다 주식 시장에 예수금으로 박을 이성적 판단은 애초에 지능상 불가능하셨습니까?"}
                         }
@@ -319,8 +318,8 @@ else:
                 st.write("")
                 st.markdown("<h3 style='color: #FFFFFF; font-size: 17px;'>📊 1. 과거 데이터 기반 세부 실시간 정산</h3>", unsafe_allow_html=True)
                 res_col1, res_col2, res_col3 = st.columns(3)
-                with res_col1: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 11px; color: #AAADB0; font-weight: 500;">🪙 총 지출 매몰 원금</div><div style="font-size: 21px; font-weight: 600; color: #FFFFFF; margin-top: 5px;">{int(total_seed):,} 원</div></div>""", unsafe_allow_html=True)
-                with res_col2: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 11px; color: #81C995; font-weight: 500;">📈 현재 자산 가치 (오늘)</div><div style="font-size: 21px; font-weight: 600; color: #81C995; margin-top: 5px;">{int(final_value):,} 원</div></div>""", unsafe_allow_html=True)
+                with res_col1: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 11px; color: #AAADB0;">🪙 총 지출 매몰 원금</div><div style="font-size: 21px; font-weight: 600; color: #FFFFFF; margin-top: 5px;">{int(total_seed):,} 원</div></div>""", unsafe_allow_html=True)
+                with res_col2: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 11px; color: #81C995;">📈 현재 자산 가치 (오늘)</div><div style="font-size: 21px; font-weight: 600; color: #81C995; margin-top: 5px;">{int(final_value):,} 원</div></div>""", unsafe_allow_html=True)
                 with res_col3:
                     card_color = "#F28B82" if missed_money > 0 else "#8AB4F8"
                     status_text = "🚨 기회상실 순손실액" if missed_money > 0 else "🛡️ 리스크 최종 방어액"
@@ -355,7 +354,7 @@ else:
                 st.write("")
                 st.error(f"🏅 **흑우 판정 코멘트**\n\n{card_info['desc']}")
 
-        # TAB 2: 사주 운세 (매일 바뀌는 일진 연동)
+        # TAB 2: 사주 운세
         with tab2:
             st.markdown("### 🔮 생년월일 명리 기반 실시간 주식 일진(日辰) 진단")
             st.caption(f"📅 오늘 날짜 기운({datetime.date.today().strftime('%Y년 %m월 %d일')})을 실시간 해체하여 당일 매수운을 매칭합니다.")
@@ -427,7 +426,7 @@ else:
                     st.write("---")
                     st.markdown(f"**💡 껄무새 도사의 뇌과학 소견서**\n\n만약 귀하가 탕진 지출 대신 진짜로 **'{asset_name}'** 주식을 매수했다면, 매일 오전 주식 창이 열릴 때마다 스트레스 코르티솔 수치가 수천 배 폭발하여 이미 **약 {hair_saved:,}개의 모근이 장렬히 탈모**되었을 것입니다. {fomo_advice}\n\n결론적으로 내 멘탈을 완벽히 수호한 당신이 최종 위너입니다. 중꺾소! 🚀")
 
-        # 🛠️ [기능 2] TAB 5: 실시간 API 연동 주가 라인 차트방 전격 출범
+        # TAB 5: 차트 시각화실
         with tab5:
             st.markdown("### 📈 껄무새 초정밀 금융 차트 시각화실 (Trading Room)")
             if st.session_state["current_audit"] is None:
@@ -439,7 +438,6 @@ else:
                     c_ticker = yf.Ticker(audit_c['ticker'])
                     c_history = c_ticker.history(period=f"{audit_c['years']}y")
                     if not c_history.empty:
-                        # 라인 차트 시각화 출력
                         st.line_chart(c_history['Close'], use_container_width=True)
                         st.caption("▲ 야후 파이낸스 실시간 API 서버 데이터 전송 프로토콜 가동 중 (단순 주가 종가 트랙 기준)")
                     else:
@@ -447,7 +445,7 @@ else:
                 except:
                     st.error("야후 파이낸스 무선 프로토콜 통신 장애")
 
-        # 🛠️ [기능 3] 좌측 하단 공백 메우기: 루팡용 실시간 금융 속보 시스템
+        # 실시간 금융 속보 시스템
         st.write("---")
         st.markdown(f"#### 📰 루팡용 실시간 금융 속보 <span style='font-size:12px; color:#AAADB0; font-weight:normal;'>⏱️ {datetime.datetime.now().strftime('%H:%M:%S')} LIVE</span>", unsafe_allow_html=True)
         
@@ -459,7 +457,7 @@ else:
         ]
         st.caption(random.choice(flash_news))
 
-    # ==================== [RIGHT SIDE] 우측 고정방 및 비밀 건의 게시판 ====================
+    # ==================== [RIGHT SIDE] 우측 고정방 및 유저 인터랙션 패널 ====================
     with chat_layout:
         try:
             from streamlit.runtime.runtime import Runtime
@@ -479,7 +477,7 @@ else:
                 st.session_state["chat_messages"].append({"role": "user", "name": f"인증러_{random.randint(100,999)}", "text": cert_text})
                 st.session_state["current_audit"] = None; st.toast("✅ 인증 완료!", icon="🔥"); st.rerun()
 
-        chat_container = st.container(height=350)
+        chat_container = st.container(height=300)
         with chat_container:
             for msg in st.session_state["chat_messages"]:
                 is_cert = "[매운맛인증]" in msg["text"] or "[흑우인증]" in msg["text"]
@@ -492,10 +490,26 @@ else:
         if user_live_input := st.chat_input("한탄하기..."):
             st.session_state["chat_messages"].append({"role": "user", "name": f"익명_{random.randint(100,999)}", "text": user_live_input}); st.rerun()
 
-        # 🛠️ [기능 4] 🔒 오직 개발자만 볼 수 있는 비밀 건의 게시판 연동 시스템
+        # 🛠️ [신설 기획] 💸 귀엽고 처량한 껄무새 모이 주기 (개발자 소액 후원 보드)
+        st.write("---")
+        st.markdown("<h4 style='font-size:13px; color:#FF8DA1; margin-bottom:2px;'>💸 배고픈 껄무새 모이통</h4>", unsafe_allow_html=True)
+        
+        # 댕청미 넘치는 후원 유도용 멘트 보드
+        st.markdown("""
+            <div style="background-color: #1F1625; border: 1px dashed #FF8DA1; padding: 12px; border-radius: 8px; margin-bottom: 8px; text-align: center;">
+                <p style="margin: 0; font-size: 11px; color: #FFB3C1; line-height: 1.4;">
+                    🦜: "주인님들이 날려먹은 기회비용 정산하느라 껄무새 CPU가 실시간으로 타들어 가고 있어요... 시발비용 딱 1,000원만 아껴서 새장 청소비나 모이값 보태주시면 안 될까요? (우물쭈물)"
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        # 실제 송금 링크나 QR 이미지 연결이 가능한 버튼 레이아웃 구현
+        # url 주소 자리에 토스 익명 송금 링크나 카카오페이 코드 주소를 넣으시면 작동합니다!
+        st.link_button("🦜 껄무새에게 모이 1,000원 쾌척하기", url="https://toss.me", use_container_width=True)
+
+        # 익명 종목 건의함
         st.write("---")
         st.markdown("<h4 style='font-size:13px; color:#AAADB0;'>🤫 익명 종목 추가 건의함</h4>", unsafe_allow_html=True)
-        st.caption("원하는 주식/코인이 있다면 적어주세요. (비밀 전송)")
         
         with st.form("suggest_form", clear_on_submit=True):
             s_input = st.text_input("📝 건의할 종목명/기능", placeholder="예: 코인, 애플 추가바람", label_visibility="collapsed")
@@ -505,7 +519,7 @@ else:
                 st.session_state["suggested_stocks"].append({"time": cur_t, "text": s_input})
                 st.toast("✅ 개발자 비밀 DB에 안심 전송되었습니다!", icon="🔒")
 
-        # 🕶️ 백엔드 어드민 토글 콘솔 (일반 유저는 토글의 존재를 모르거나 안 켬)
+        # 백엔드 어드민 토글 콘솔
         is_admin = st.toggle("🛠️ 개발자 관리 콘솔", value=False)
         if is_admin:
             st.markdown("<h5 style='font-size:12px; color:#FFD700;'>📂 유저들의 비밀 종목 건의 리스트</h5>", unsafe_allow_html=True)
