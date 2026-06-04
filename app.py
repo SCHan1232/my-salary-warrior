@@ -6,7 +6,7 @@ import yfinance as yf
 
 # 1. 껄무새 다크모드 기반 최적화 설정
 st.set_page_config(
-    page_title="✨ 껄무새 - 2030 필수 자산 케어 v36", 
+    page_title="✨ 껄무새 - 2030 필수 자산 케어 v37", 
     page_icon="🦜",
     layout="wide"
 )
@@ -212,7 +212,7 @@ else:
                     unit_price = HABIT_PRICE_DICT[selected_option]
                     
                     GGUL_TITLE_MAP = {
-                        "탕후루/마라탕 수명 단축 쿨타임": "마라탕 끊고 우량주 풀매수해서 건물 올렸을 '껄'",
+                        "탕후루/마라탕 수명 단축 쿨타임": "마라탕 끊고 하이닉스 풀매수해서 건물 올렸을 '껄'",
                         "스타벅스 바닐라라떼+디저트": "스벅 프리미엄 당수치 올릴 돈으로 건물주 됐을 '껄'",
                         "올리브영 세일 '구경만' 가기": "올영 올인할 시드로 시총 우량주 풀소유 해봤을 '껄'",
                         "불금 배달 떡볶이+치킨 세트": "야식 배달 라이더 팁 쏠 돈으로 배달 앱 주주 됐을 '껄'",
@@ -271,11 +271,10 @@ else:
                 future_value = final_value * (current_price / then_price)
                 asset_clean_name = target_asset.split(" (")[0]
                 
-                # 🛠️ [욕설 원천 배제] 킹받지만 품격 있는 대형 팩폭 멘트 리팩토링
                 if missed_money > 0:
                     if selected_option == "✍️ 내 쓸모없는 지출 직접 입력하기":
                         if total_seed <= 3000000:
-                            card_info = {"title": "🌱 응애급 자잘한 소비 대장", "desc": f"소액 결제 위주라 자산 성장에 타격이 없을 거라고 스스로 안심하고 계시는군요.\n무심코 긁어댄 '{habit_clean_name}' 지출들이 보이지 않는 곳에서 마이너스 시드가 되어 계좌 자산을 야무지게 갈아먹는 중입니다.\n하루빨리 소비 지문을 제한하지 않으면, 귀하의 투자 평단가는 영원히 하락장을 탈출할 수 없습니다."}
+                            card_info = {"title": "🌱 응애급 자잘한 소비 대장", "desc": f"푼돈 위주의 자잘한 결제라 통장에 타격이 없을 거라고 스스로 안심하고 계시는군요.\n무심코 긁어댄 '{habit_clean_name}' 지출들이 보이지 않는 곳에서 마이너스 시드가 되어 계좌 자산을 야무지게 갈아먹는 중입니다.\n하루빨리 소비 지문을 제한하지 않으면, 귀하의 투자 평단가는 영원히 하락장을 탈출할 수 없습니다."}
                         elif total_seed <= 15000000:
                             card_info = {"title": "💸 통장 전력 질주 분쇄 레이서", "desc": f"남들이 대가리 깨져가며 정립식 우량주를 모을 때, 소비 장바구니에 소중한 월급을 알차게 녹여내셨군요.\n'{habit_clean_name}' 명목으로 증발해 버린 천만 원대의 거금은 금융 시장의 세력들이 아주 달콤하게 분배해 갔습니다.\n찰나의 도파민 충전 대가로 미래 최종 자산 {int(future_value/10000):,}만 원을 시원하게 양보하신 이 시대의 기부천사십니다."}
                         elif total_seed <= 50000000:
@@ -284,10 +283,10 @@ else:
                             card_info = {"title": "👑 자산 파괴계의 월드클래스 엘리트", "desc": f"걸어 다니는 마이너스 인간 지표이자 소비 권력의 일인자가 사내망에 당당히 상주하고 계셨군요.\n억 단위의 소중한 인생 시드를 오직 본인의 확고한 취향이 담긴 '{habit_clean_name}' 명목으로 자본주의 시장에 아낌없이 헌납하셨습니다.\n덕분에 {asset_clean_name}의 진짜 주주들은 발 뻗고 아주 편안하게 숙면을 취합니다. 눈물 닦고 9시 정각에 보고서나 올리세요."}
                     else:
                         custom_cards = {
-                            "탕후루/마라탕 수명 단축 쿨타임 (1회 18,000원)": {"title": "🩸 혈당 수치 폭발 마라탕 중독자", "desc": "남들 반도체 슈퍼 사이클 호황 누릴 때 혼자 매콤한 고추기름 국물과 달콤한 설탕 시럽에 영혼을 저당 잡힌 주주님.\n입안의 일시적인 행복과 위장 평수를 얻은 대가로, 미래 통장 잔고의 중심 척추는 완벽하게 아작이 나 버렸습니다.\n멋진 수입차 핸들 대신 마라탕 숟가락을 깊게 쥐고 있을 미래의 자신에게 조용히 진단서를 제출해 보세요."},
+                            "탕후루/마라탕 수명 단축 쿨타임 (1회 18,000원)": {"title": "🩸 혈당 수치 폭발 마라탕 중독자", "desc": "남들 반도체 슈퍼 사이클 호황 누릴 때 혼자 붉은 고추기름 국물과 설탕 시럽 코팅에 영혼을 저당 잡힌 주주님.\n입안의 일시적인 행복과 위장 평수를 얻은 대가로, 미래 통장 잔고의 미래 척추는 완벽하게 내려앉아 아작이 나 버렸습니다.\n멋진 수입차 핸들 대신 마라탕 숟가락을 깊게 쥐고 있을 미래의 자신에게 조용히 진단서를 제출해 보세요."},
                             "스타벅스 바닐라라떼+디저트 (1회 11,000원)": {"title": "☕ 사이렌 오더 명예 수석 기부의장", "desc": "매달 스타벅스 프리미엄 별 사냥과 고농축 액상과당에 취해 살며, 남의 나라 커피 기업 시총 방어에 본인 급여를 장렬히 갈아 넣으신 호구.\n본인 계좌는 한겨울 한파 주의보가 내렸는데 매일 아침 당당하게 닉네임 불리며 종이컵 받아오는 모습이 참 처량합니다.\n그 종이 컵홀더 탑처럼 모아두면 미래에 강남 아파트 전세 계약서로 자동 교환이라도 해준답니까?"},
-                            "올리브영 세일 '구경만' 가기 (1회 45,000원)": {"title": "💄 올영 시총 보존 전사 팀장", "desc": "세일 알림 문자만 오면 이성이 흐려져 '구경만 해야지' 하고 진입해 장바구니 가득 팩과 틴트를 쟁여 나오는 스마트 영애.\n피부는 일시적으로 촉촉하게 정돈되었을지 몰라도, 귀하의 투자 포트폴리오는 알거지 상태로 굶주려 뼈만 남은 채 비명을 지르고 있습니다.\n미래에 화장품 바닥까지 다 긁어 바르고 한강 뷰 보며 홀로 울고 계실 모습이 아주 눈물겹습니다."},
-                            "불금 배달 떡볶이+치킨 세트 (1회 32,000원)": {"title": "🐔 배달 앱 플래티넘 다이아몬드 호구", "desc": "금요일 퇴근 후 스트레스 핑계 대며 캡사이신과 기름진 튀김 옷으로 위장을 혹사하는 사이, 통장에 우량 자산이 꽂힐 기회는 야무지게 소화되어 소멸했습니다.\n배달 라이더 영웅들에게 배달 팁을 쾌척하며 자선사업 하시는 동안 귀하의 노후 자금은 완벽하게 멸망의 길로 직진했습니다.\n남은 치킨 무 국물이나 마시며 회사 모니터 앞에서 시원하게 껄껄 대십시오."},
+                            "올리브영 세일 '구경만' 가기 (1회 45,000원)": {"title": "💄 올영 시총 보존 전사 팀장", "desc": "세일 알림 문자만 오면 이성이 흐려져 '구경만 해야지' 하고 진입해 장바구니 가득 팩과 틴트를 쟁여 나오는 뇌 빼놓은 영애.\n피부는 일시적으로 촉촉하게 정돈되었을지 몰라도, 귀하의 투자 포트폴리오는 알거지 상태로 굶주려 뼈만 남은 채 비명을 지르고 있습니다.\n미래에 화장품 바닥까지 다 긁어 바르고 거울 보며 서럽게 울고 계실 모습이 아주 눈물겹습니다."},
+                            "불금 배달 떡볶이+치킨 세트 (1회 32,000원)": {"title": "🐔 배달 앱 플래티넘 다이아몬드 호구", "desc": "금요일 퇴근 후 스트레스 핑계 대며 캡사이신과 기름진 튀김 옷으로 위장을 혹사하는 사이, 통장에 우량 자산이 꽂힐 기회는 야무지게 소화되어 소멸했습니다.\n라이더 영웅들에게 배달 팁을 쾌척하며 자선사업 하시는 동안 귀하의 노후 자금은 완벽하게 멸망의 길로 직진했습니다.\n남은 치킨 무 국물이나 마시며 회사 모니터 앞에서 시원하게 껄껄 대십시오."},
                             "지그재그/W컨셉 충동 의류 매수 (1회 65,000원)": {"title": "👗 방구석 드레스룸 독재자 영애", "desc": "침대에 누워 흐린 눈으로 옷 구경하다 네이버페이 지문 인식 광속으로 태우며 택배 박스 뜯는 도파민에 중독된 중꺾소 패셔니스타.\n방구석 옷장은 미어터져서 문이 안 닫히지만 주식 계좌는 알거지 상태로 처참하게 방치되어 산소호흡기를 달고 있습니다.\n미래에 그 옷 레이어드로 수십 벌 겹쳐 입고 한겨울 서울역 광장에서 노숙이라도 하실 기세라 참 보기 좋습니다."},
                             "매달 속눈썹 펌/네일 정기권 (1회 55,000원)": {"title": "💅 손끝 발끝 풀소유 화려한 개미", "desc": "손톱 위에 화려한 파츠 올리고 속눈썹 바짝 바비인형처럼 끌어올려 겉치레 품격은 채웠으나 정작 자산 성장률은 바닥에 매친 모순의 극치.\n키보드 두드릴 때 손가락에서 영롱한 빛이 나니 월급이 삭제되는 고통도 깨끗이 잊으셨나 봅니다.\n그 반짝이는 파츠 떼어다 주식 시장에 예수금으로 박을 이성적 판단은 애초에 지능상 불가능하셨습니까?"}
                         }
@@ -334,7 +333,7 @@ else:
 </div>
 <div style="text-align: center; margin: 20px 0;">
 <span style="font-size: 13px; color: #AAADB0; display: block; margin-bottom: 8px;">📢 절망의 무한 루프 헤드라인</span>
-<h2 style="font-size: 17px; font-weight: 800; color: #FFFFFF; margin: 0; line-height: 1.4; word-break: keep-all;">"{ggul_title}"</h2>
+<h2 style="font-size: 16px; font-weight: 800; color: #FFFFFF; margin: 0; line-height: 1.4; word-break: keep-all;">"{ggul_title}"</h2>
 </div>
 <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 12px 15px; border-radius: 8px; margin-bottom: 10px;">
 <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
@@ -372,7 +371,7 @@ else:
                     
                     saju_responses = [
                         f"🔮 [오늘의 일진: ⚠️ 편재살 대치 / 비견 겁재 강세]\n\n오늘은 손가락에 급격한 도파민 충동 기류가 끼는 날입니다. 지금 시점에 '{clean_stock}' 주문을 넣기보다는 시장의 방향성을 조심스럽게 살피며 원화 예수금을 소중히 숨기십시오.",
-                        f"🔮 [오늘의 일진: ✨ 정재 귀인 합류 / 식신생재 활성화]\n\n귀하의 명리와 오늘 일진의 기운이 황금 합을 이룹니다. 소액이라도 흐린 눈 소비 아낀 돈으로 '{clean_stock}'을(를) 오늘 분할 적립하면 도파민이 황금 알로 변하는 역사적 기류를 타게 됩니다.",
+                        f"🔮 [오늘의 일진: ✨ 정재 귀인 합류 / 식신생재 활성화]\n\n귀하의 명리와 오늘 일진의 기운이 황금 합을 이웁니다. 소액이라도 흐린 눈 소비 아낀 돈으로 '{clean_stock}'을(를) 오늘 분할 적립하면 도파민이 황금 알로 변하는 역사적 기류를 타게 됩니다.",
                         f"🔮 [오늘의 일진: 🪨 토(土)기운 정체 / 문서운 하강]\n\n계좌를 지키는 관성 기운이 정체되었습니다. 오늘 무리하게 진입하면 귀하가 진입한 가격이 정확히 3개월 동안 견고한 고점 벽이 될 수 있으니 매수 버튼에서 손 떼고 치킨이나 한 마리 시켜 드십시오.",
                         f"🔮 [오늘의 일진: 🌊 수(Water)기운 유동 / 편인 대길 수혜]\n\n재물 창고 문이 가볍게 열리는 일진입니다. 지나친 의심을 거두고 '{clean_stock}'에 소신껏 분할 진입하는 것은 오늘 저녁 유흥비로 탕진하는 것보다 500배 유용한 자산 보존책이 됩니다."
                     ]
@@ -473,6 +472,61 @@ else:
         if st.session_state["current_audit"] is not None:
             audit = st.session_state["current_audit"]
             st.caption(f"🏅 **내 등급:** {audit['grade']}")
+            
+            # 🛠️ [🚨 에러 수정 완료] cert_text 문자열의 긴 줄글을 분할 처리 및 따옴표 정상 마감 가공
             if st.button("👑 내 등급 바로 인증", use_container_width=True):
-                cert_text = f"🚨 [매운맛인증] 내 탕진: '{audit['habit']}' ➡️ '{audit['asset']}' 에 박았으면 미래 잔고 **{audit['future_val']}** 떴음; 팩폭 등급: [{audit['grade']}]"
-                st.session_state["chat_messages"].append({"role": "user", "
+                pt1 = f"🚨 [매운맛인증] 내 탕진: '{audit['habit']}' ➡️ '{audit['asset']}'"
+                pt2 = f" 에 박았으면 미래 최종 예상 잔고는 **{audit['future_val']}**;"
+                pt3 = f" 팩폭 등급: [{audit['grade']}]"
+                cert_text = pt1 + pt2 + pt3
+                
+                st.session_state["chat_messages"].append({"role": "user", "name": f"인증러_{random.randint(100,999)}", "text": cert_text})
+                st.session_state["current_audit"] = None
+                st.toast("✅ 인증 완료!", icon="🔥")
+                st.rerun()
+
+        chat_container = st.container(height=300)
+        with chat_container:
+            for msg in st.session_state["chat_messages"]:
+                is_cert = "[매운맛인증]" in msg["text"] or "[흑우인증]" in msg["text"]
+                avatar_icon = "👑" if is_cert else "🦜"
+                with st.chat_message(msg["role"], avatar=avatar_icon):
+                    st.markdown(f"**{msg['name']}**")
+                    if is_cert: st.caption(msg["text"])
+                    else: st.write(msg["text"])
+
+        if user_live_input := st.chat_input("한탄하기..."):
+            st.session_state["chat_messages"].append({"role": "user", "name": f"익명_{random.randint(100,999)}", "text": user_live_input}); st.rerun()
+
+        # 💸 귀엽고 처량한 껄무새 모이 주기 (개발자 소액 후원 보드)
+        st.write("---")
+        st.markdown("<h4 style='font-size:13px; color:#FF8DA1; margin-bottom:2px;'>💸 배고픈 껄무새 모이통</h4>", unsafe_allow_html=True)
+        
+        st.markdown("""
+            <div style="background-color: #1F1625; border: 1px dashed #FF8DA1; padding: 12px; border-radius: 8px; margin-bottom: 8px; text-align: center;">
+                <p style="margin: 0; font-size: 11px; color: #FFB3C1; line-height: 1.4;">
+                    🦜: "유저분들이 양보하신 기회비용 정산하느라 껄무새 CPU가 뜨겁게 타들어 가고 있어요... 불필요한 비용 딱 1,000원만 아껴서 껄무새 모이값 보태주시면 안 될까요? (우물쭈물)"
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        st.link_button("🦜 껄무새에게 모이 1,000원 쾌척하기", url="https://toss.me", use_container_width=True)
+
+        # 익명 종목 건의함
+        st.write("---")
+        st.markdown("<h4 style='font-size:13px; color:#AAADB0;'>🤫 익명 종목 추가 건의함</h4>", unsafe_allow_html=True)
+        
+        with st.form("suggest_form", clear_on_submit=True):
+            s_input = st.text_input("📝 건의할 종목명/기능", placeholder="예: 코인, 애플 추가바람", label_visibility="collapsed")
+            s_submit = st.form_submit_button("🔒 개발자에게만 비밀 전송")
+            if s_submit and s_input:
+                cur_t = datetime.datetime.now().strftime("%H:%M")
+                st.session_state["suggested_stocks"].append({"time": cur_t, "text": s_input})
+                st.toast("✅ 개발자 비밀 DB에 안심 전송되었습니다!", icon="🔒")
+
+        # 백엔드 어드민 토글 콘솔
+        is_admin = st.toggle("🛠️ 개발자 관리 콘솔", value=False)
+        if is_admin:
+            st.markdown("<h5 style='font-size:12px; color:#FFD700;'>📂 유저들의 비밀 종목 건의 리스트</h5>", unsafe_allow_html=True)
+            for s in st.session_state["suggested_stocks"]:
+                st.markdown(f"<p style='font-size:11px; margin:2px 0; color:#81C995;'><b>[{s['time']}]</b> {s['text']}</p>", unsafe_allow_html=True)
