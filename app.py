@@ -5,7 +5,7 @@ import random
 
 # 1. 껄무새 다크모드 기반 최적화 설정
 st.set_page_config(
-    page_title="✨ 껄무새 - 2030 필수 자산 케어 v21", 
+    page_title="✨ 껄무새 - 2030 필수 자산 케어 v22", 
     page_icon="🦜",
     layout="centered" 
 )
@@ -52,7 +52,7 @@ if is_boss_mode:
 
 # 🟢 AREA B: 껄무새 놀이터
 else:
-    # 🛍️ 기존 프리셋 데이터베이스
+    # 🛍️ 프리셋 데이터베이스
     HABIT_PRICE_DICT = {
         "탕후루/마라탕 수명 단축 쿨타임 (1회 18,000원)": 18000,
         "스타벅스 바닐라라떼+디저트 (1회 11,000원)": 11000, 
@@ -80,26 +80,15 @@ else:
         "샌디스크/웨스턴디지털 (WDC)": {"current_price": 72, "yearly_prices": [72, 64, 42, 39, 52]} 
     }
 
-    st.markdown("""
-        <div style="margin-bottom: 5px;">
-            <span style="font-size: 38px; font-weight: 800; background: linear-gradient(45deg, #4285F4, #9B51E0, #E91E63); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px;">
-                🦜 껄무새
-            </span>
-        </div>
-    """, unsafe_allow_html=True)
-
     tab1, tab2, tab3 = st.tabs(["📊 자산 타임머신", "🔮 껄무새 사주도사", "⚔️ 주주총회 밸런스"])
 
     # ==================== TAB 1: 메인 시뮬레이터 탭 ====================
     with tab1:
         st.markdown("<p style='color: #AAADB0; font-size: 14px; margin-bottom: 20px;'>내 탕진 비용의 스노우볼을 역산하고 미래 퀀텀점프 자산을 예측합니다.</p>", unsafe_allow_html=True)
         
-        # 🛠️ 지출 항목 리스트 맨 앞에 '직접 입력' 추가
         dropdown_options = ["✍️ 내 쓸모없는 지출 직접 입력하기"] + list(HABIT_PRICE_DICT.keys())
-        
         selected_option = st.selectbox("🛍️ 매달 '흐린 눈'으로 지출 중인 항목", dropdown_options)
         
-        # '직접 입력' 선택 시 동적 입력창 활성화
         custom_habit_name = ""
         custom_habit_price = 0
         if selected_option == "✍️ 내 쓸모없는 지출 직접 입력하기":
@@ -119,7 +108,6 @@ else:
             submitted = st.form_submit_button("✨ 껄무새 엔진 가동 (Enter)")
 
         if submitted:
-            # 직접 입력 처리 분기 로직
             if selected_option == "✍️ 내 쓸모없는 지출 직접 입력하기":
                 habit_clean_name = custom_habit_name if custom_habit_name else "익명 탕진 지출"
                 unit_price = custom_habit_price
@@ -151,21 +139,49 @@ else:
             
             growth_multiplier = current_price / then_price
             future_value = final_value * growth_multiplier
-
             asset_clean_name = target_asset.split(" (")[0]
             
-            # 등급 타이틀 분기 매핑
+            # 🛠️ [초고도화 알고리즘] 직접 입력 시 금액대별 동적 커스텀 등급 분기 로직 완비!
             if missed_money > 0:
-                custom_cards = {
-                    "탕후루/마라탕 수명 단축 쿨타임 (1회 18,000원)": {"title": "🩸 혈당 폭발 마라탕 중독자", "desc": "마라 국물과 설탕 코팅에 영혼을 저당 잡아 혈당을 올리는 사이, 본인의 시드머니는 주식 시장에서 완전히 녹아내리게 방치한 위대한 푸드 파이터"},
-                    "스타벅스 바닐라라떼+디저트 (1회 11,000원)": {"title": "☕ 사이렌 오더 기부 천사", "desc": "매달 스타벅스 별사냥과 고카페인 시럽에 취해 살며 스타벅스 코리아 매출 상승에는 기여했으나 정작 본인 계좌는 공황 상태에 빠뜨린 주주"},
-                    "올리브영 세일 '구경만' 가기 (1회 45,000원)": {"title": "💄 올리브영 탕진 잼 마스터", "desc": "세일 문자만 오면 '구경만 해야지' 하고 들어가 틴트와 팩으로 바구니를 채우며 CJ 올리브영 시총 방어에 본인 시드를 갈아 넣은 VVIP 흑우"},
-                    "불금 배달 엽떡+치킨 세트 (1회 32,000원)": {"title": "🐔 배달 앱 다이아몬드 등급", "desc": "금요일 밤의 고독과 스트레스를 캡사이신과 튀김 옷으로 위로하느라, 통장에 억 단위 자산이 쌓일 기회를 아주 야무지게 씹어 삼키신 야식 마스터"},
-                    "지그재그/W컨셉 충동 의류 매수 (1회 65,000원)": {"title": "👗 새벽 배송 폰결제 야수", "desc": "침대에 누워 흐린 눈으로 옷 구경하다 네이버페이 6자리를 광속으로 태우며, 방구석 드레스룸은 채웠으나 자산 포트폴리오는 전라로 만든 패셔니스타"},
-                    "매달 속눈썹 펌/네일 정기권 (1회 55,000원)": {"title": "💅 손끝 발끝 풀소유 영애", "desc": "손톱 위에 파츠를 올리고 눈썹을 바짝 끌어올려 비주얼 품격은 유지했으나, 정작 본인 자산 성장률은 바닥에 바짝 붙여버린 관리의 대가"}
-                }
-                default_card = {"title": "🛍️ 한계 돌파 탕진러", "desc": f"본인만의 확고한 영혼의 지출인 '{habit_clean_name}'에 시드를 쾌척하여 미래 빅테크 {asset_clean_name}의 퀀텀점프 상승 기류를 장렬히 비껴가신 낭만 흑우 마스터"}
-                card_info = custom_cards.get(selected_option, default_card)
+                if selected_option == "✍️ 내 쓸모없는 지출 직접 입력하기":
+                    # 직접 입력 유저를 위한 기회상실액 스케일별 멘트 분기
+                    if total_seed <= 3000000:
+                        card_info = {
+                            "title": "🌱 시작은 달콤한 초보 탕진러",
+                            "desc": f"아직은 시드 규모가 작아 타격이 적어 보이죠? 하지만 무심코 긁어댄 '{habit_clean_name}' 비용이 미래 우량 자산 {asset_clean_name}의 퀀텀점프 레일 위에서 역복리 마귀로 무럭무럭 자라나고 있음을 경계하십시오."
+                        }
+                    elif total_seed <= 15000000:
+                        card_info = {
+                            "title": "💸 월급 통장 슬레이어 대리",
+                            "desc": f"정신 차려보니 공중에 분해된 원금만 천만 원 스케일! 남들 주식 적립해서 미래 자산 불릴 때, 본인은 장바구니에 '{habit_clean_name}'을(를) 정성껏 적립해 통장을 야무지게 학살하셨습니다."
+                        }
+                    elif total_seed <= 50000000:
+                        card_info = {
+                            "title": "🚨 장바구니 풀소유 광기 야수",
+                            "desc": f"님 손가락은 거의 금융 브레이커 수준. 국산 중형차 한 대 뽑을 수준의 거금을 오직 '{habit_clean_name}' 하나에 꼴아박으며, 미래 통장 최종 잔고가 {int(future_value/10000):,}만 원으로 뻥튀기될 역사적 찬스를 통쾌하게 걷어차셨습니다."
+                        }
+                    else:
+                        card_info = {
+                            "title": "👑 자산 파괴 자비에 교수",
+                            "desc": f"존경합니다 인간 지표 끝판왕이시여. 억 단위의 기회비용을 오직 본인의 영혼이 담긴 '{habit_clean_name}' 지출 명목으로 시장에 전부 기부하셨습니다. 덕분에 {asset_clean_name}의 진짜 주주들이 호황을 누립니다. 이 시대 최고의 자산 분쇄기이십니다."
+                        }
+                else:
+                    # 기존 12가지 프리셋 선택 시의 고유 멘트 매핑
+                    custom_cards = {
+                        "탕후루/마라탕 수명 단축 쿨타임 (1회 18,000원)": {"title": "🩸 혈당 폭발 마라탕 중독자", "desc": "마라 국물과 설탕 코팅에 영혼을 저당 잡아 혈당을 올리는 사이, 본인의 시드머니는 주식 시장에서 완전히 녹아내리게 방치한 위대한 푸드 파이터"},
+                        "스타벅스 바닐라라떼+디저트 (1회 11,000원)": {"title": "☕ 사이렌 오더 기부 천사", "desc": "매달 스타벅스 별사냥과 고카페인 시럽에 취해 살며 스타벅스 코리아 매출 상승에는 기여했으나 정작 본인 계좌는 공황 상태에 빠뜨린 주주"},
+                        "올리브영 세일 '구경만' 가기 (1회 45,000원)": {"title": "💄 올리브영 탕진 잼 마스터", "desc": "세일 문자만 오면 '구경만 해야지' 하고 들어가 틴트와 팩으로 바구니를 채우며 CJ 올리브영 시총 방어에 본인 시드를 갈아 넣은 VVIP 흑우"},
+                        "불금 배달 엽떡+치킨 세트 (1회 32,000원)": {"title": "🐔 배달 앱 다이아몬드 등급", "desc": "금요일 밤의 고독과 스트레스를 캡사이신과 튀김 옷으로 위로하느라, 통장에 억 단위 자산이 쌓일 기회를 아주 야무지게 씹어 삼키신 야식 마스터"},
+                        "지그재그/W컨셉 충동 의류 매수 (1회 65,000원)": {"title": "👗 새벽 배송 폰결제 야수", "desc": "침대에 누워 흐린 눈으로 옷 구경하다 네이버페이 6자리를 광속으로 태우며, 방구석 드레스룸은 채웠으나 자산 포트폴리오는 전라로 만든 패셔니스타"},
+                        "매달 속눈썹 펌/네일 정기권 (1회 55,000원)": {"title": "💅 손끝 발끝 풀소유 영애", "desc": "손톱 위에 파츠를 올리고 눈썹을 바짝 끌어올려 비주얼 품격은 유지했으나, 정작 본인 자산 성장률은 바닥에 바짝 붙여버린 관리의 대가"},
+                        "퇴근 후 카미카제 주말 위스키 (1회 85,000원)": {"title": "🥃 고독한 오크통 주주", "desc": "피트 향 머금은 싱글몰트로 오늘 하루의 서러움을 녹이려다 통장 잔고까지 완벽하게 증발시켜 미장 빅테크 주주들의 기쁨이 되어주신 알코올 요정"},
+                        "플랫폼 가챠/게임 스킨 현질 (1회 50,000원)": {"title": "🎮 데이터 쪼가리 풀소유 야수", "desc": "모니터 속 전설 스킨과 가챠 연출의 도파민에 취해 클릭 몇 번으로 실제 집 한 채 살 돈을 게임 서버 유지비로 쾌척해 버린 명예 야수"},
+                        "주말 골프 연습장/필드 호사 (1회 120,000원)": {"title": "⛳ 잔디밭 지출의 나이스샷", "desc": "굿샷을 외치며 그린 위에서 호사를 누리는 동안 정작 본인 주식 자산 포트폴리오는 OB 구역 숲속으로 완벽하게 날려버린 필드의 타이거 흑우"},
+                        "기념일 에피타이저 오마카세 (1회 150,000원)": {"title": "🍣 럭셔리 파인다이닝 영애", "desc": "셰프의 친절한 설명을 들으며 입안의 사치를 즐기는 순간, 내 통장 잔고는 엔비디아의 성장 에너지를 먹지 못해 원자 단위로 굶주려가던 모순의 극치"},
+                        "체형 교정 명목 필라테스 (1회 60,000원)": {"title": "🧘 기구 위에서 비명지르는 영애", "desc": "코어 근육을 단단하게 잡아내어 척추 정렬에는 성공했으나, 정작 미래 내 집 마련을 위한 자산의 척추는 완벽하게 무너뜨린 관리의 모순"},
+                        "유럽 축구 구단 감성 레플리카 유니폼 (1회 140,000원)": {"title": "⚽ 방구석 올드 트래포드 구단주", "desc": "해외 축구 구단의 엠블럼 패치를 보며 밤마다 열광했으나, 정작 본인 자산 리그는 4부 리그 강등권에서 처참하게 헤매게 만든 유니폼 수집가"}
+                    }
+                    card_info = custom_cards.get(selected_option)
             else:
                 card_info = {"title": "🛡️ 자산 수호 헷지 명인", "desc": "폭락 사이클을 예리한 자산 우회 방어로 피해 가며 내 통장의 순수 가치를 사수해 낸 위대한 금융 트레이더"}
 
@@ -238,7 +254,7 @@ else:
                 cert_text = f"🚨 [흑우인증] 내 탕진항목: '{audit['habit']}' ➡️ 만약 '{audit['asset']}' 에 박았으면 미래 잔고 {audit['future_val']} 찍혔음.. 내 판정등급은 [{audit['grade']}] 이다 흑우들아 ㅠㅠ"
                 st.session_state["chat_messages"].append({"role": "user", "name": f"인증러_{random.randint(100,999)}", "text": cert_text})
                 st.session_state["current_audit"] = None
-                st.toast("✅ 대화방에 흑우 등급 정산서 박제 완료!", icon="🔥")
+                st.toast("✅ 대화방에 커스텀 등급 박제 완료!", icon="🔥")
                 st.rerun()
 
         chat_container = st.container(height=320)
@@ -260,8 +276,8 @@ else:
         st.markdown("### 🔮 생년월일 명리 기반 주식 매수 타이밍 진단")
         st.write("8자리 생년월일 기운을 오행으로 분해하여, 질문하신 주식 종목의 진입 적절성을 사주학적으로 감정합니다.")
         
-        user_birth = st.text_input("🎂 생년월일 8자리를 입력하세요 (예: 19961025)", max_chars=8, placeholder="19950714")
-        stock_question = st.text_input("💬 주식 질문을 던지세요", placeholder="예: 삼성전자 오늘 사도 될까요?")
+        user_birth = st.text_input("🎂 생년월일 8자리를 입력하세요 (예: 19961025)", max_chars=8, placeholder="19950714", key="saju_birth_input")
+        stock_question = st.text_input("💬 주식 질문을 던지세요", placeholder="예: 삼성전자 오늘 사도 될까요?", key="saju_stock_input")
         
         if st.button("☯️ 껄무새 도사에게 사주 연동 점괘 받기"):
             if len(user_birth) < 8 or not user_birth.isdigit():
