@@ -5,9 +5,9 @@ import random
 
 # 1. 껄무새 다크모드 기반 최적화 설정
 st.set_page_config(
-    page_title="✨ 껄무새 - 2030 필수 자산 케어 v24", 
+    page_title="✨ 껄무새 - 2030 필수 자산 케어 v25", 
     page_icon="🦜",
-    layout="wide"  # 와이드 레이아웃 유지
+    layout="wide"  # 좌우 분할을 위한 와이드 레이아웃
 )
 
 # 2. ⚡ 부장님 감지 패닉 버튼
@@ -88,7 +88,7 @@ else:
         </div>
     """, unsafe_allow_html=True)
 
-    # 🛠️ [레이아웃 비율 초슬림 조정] 2.5대 0.8 구조로 대화방을 훨씬 작고 컴팩트하게 수정!
+    # 2.5 대 0.8 비율 유지
     main_layout, chat_layout = st.columns([2.5, 0.8], gap="medium")
 
     # ==================== [LEFT SIDE] 메인 기능 영역 ====================
@@ -168,14 +168,14 @@ else:
                             "스타벅스 바닐라라떼+디저트 (1회 11,000원)": {"title": "☕ 사이렌 오더 기부 천사", "desc": "매달 스타벅스 별사냥과 고카페인 시럽에 취해 살며 스타벅스 코리아 매출 상승에는 기여했으나 정작 본인 계좌는 공황 상태에 빠뜨린 주주"},
                             "올리브영 세일 '구경만' 가기 (1회 45,000원)": {"title": "💄 올리브영 탕진 잼 마스터", "desc": "세일 문자만 오면 '구경만 해야지' 하고 들어가 틴트와 팩으로 바구니를 채우며 CJ 올리브영 시총 방어에 본인 시드를 갈아 넣은 VVIP 흑우"},
                             "불금 배달 엽떡+치킨 세트 (1회 32,000원)": {"title": "🐔 배달 앱 다이아몬드 등급", "desc": "금요일 밤의 고독과 스트레스를 캡사이신과 튀김 옷으로 위로하느라, 통장에 억 단위 자산이 쌓일 기회를 아주 야무지게 씹어 삼키신 야식 마스터"},
-                            "지그재그/W컨셉 충동 의류 매수 (1회 65,000원)": {"title": "👗 새벽 배송 폰결제 야수", "desc": "침대에 누워 흐린 눈으로 옷 구경하다 네이버페 6자리를 광속으로 태우며, 방구석 드레스룸은 채웠으나 자산 포트폴리오는 전라로 만든 패셔니스타"},
+                            "지그재그/W컨셉 충동 의류 매수 (1회 65,000원)": {"title": "👗 새벽 배송 폰결제 야수", "desc": "침대에 누워 흐린 눈으로 옷 구경하다 네이버페이 6자리를 광속으로 태우며, 방구석 드레스룸은 채웠으나 자산 포트폴리오는 전라로 만든 패셔니스타"},
                             "매달 속눈썹 펌/네일 정기권 (1회 55,000원)": {"title": "💅 손끝 발끝 풀소유 영애", "desc": "손톱 위에 파츠를 올리고 눈썹을 바짝 끌어올려 비주얼 품격은 유지했으나, 정작 본인 자산 성장률은 바닥에 바짝 붙여버린 관리의 대가"}
                         }
                         card_info = custom_cards.get(selected_option, {"title": "🛍️ 프로 탕진러", "desc": "지출로 도파민을 채우며 우량주 투자 타이밍을 놓치신 직장인 명예 주주"})
                 else:
                     card_info = {"title": "🛡️ 자산 수호 헷지 명인", "desc": "폭락 사이클을 예리한 자산 우회 방어로 피해 가며 내 통장의 순수 가치를 사수해 낸 위대한 금융 트레이더"}
 
-                # 실시간 오픈 대화방 연동용 세션 저장
+                # 대화방 연동용 세션 저장
                 st.session_state["current_audit"] = {
                     "habit": habit_clean_name,
                     "asset": asset_clean_name,
@@ -183,7 +183,7 @@ else:
                     "grade": card_info["title"]
                 }
 
-                # 데이터 출력부
+                # 세부 정산 리포트
                 st.write("---")
                 st.markdown(f"<h3 style='color: #FFFFFF; font-size: 17px;'>🔍 0. 데이터 신뢰성 검증 리포트</h3>", unsafe_allow_html=True)
                 val_col1, val_col2 = st.columns(2)
@@ -257,11 +257,12 @@ else:
             st.progress(int(per_A))
             st.caption(f"📊 주주 배틀 현황: 🅰️ {per_A:.1f}% vs 🅱️ {100-per_A:.1f}% (총 {total_votes}명 의결권 행사)")
 
-    # ==================== 🛠️ [RIGHT SIDE] 초슬림&컴팩트 미니 대화방 위젯 ====================
+    # ==================== [RIGHT SIDE] 우측 고정방 및 실시간 인원 카운터 ====================
     with chat_layout:
-        st.markdown("<h3 style='margin-top:23px; font-size:16px;'>💬 실시간 오픈방</h3>", unsafe_allow_html=True)
+        # 🛠️ [신규 기믹 장착] 동적 연출 효과가 반영된 실시간 루팡 인원수 표기
+        live_users = random.randint(115, 145)
+        st.markdown(f"<h3 style='margin-top:23px; font-size:16px;'>💬 실시간 오픈방 <span style='font-size:12px; color:#81C995; font-weight:normal;'>🟢 {live_users}명 루팡 중</span></h3>", unsafe_allow_html=True)
         
-        # 👑 등급 인증 연동 모듈 크기도 작게 압축
         if st.session_state["current_audit"] is not None:
             audit = st.session_state["current_audit"]
             st.caption(f"🏅 **내 등급:** {audit['grade']}")
@@ -272,7 +273,6 @@ else:
                 st.toast("✅ 인증 완료!", icon="🔥")
                 st.rerun()
 
-        # 대화 피드 높이도 550 ➡️ 450으로 콤팩트하게 줄여서 우측 사이드에 귀엽게 밀착!
         chat_container = st.container(height=450)
         with chat_container:
             for msg in st.session_state["chat_messages"]:
@@ -280,10 +280,9 @@ else:
                 avatar_icon = "👑" if is_cert else "🦜"
                 with st.chat_message(msg["role"], avatar=avatar_icon):
                     st.markdown(f"**{msg['name']}**")
-                    if is_cert: st.caption(msg["text"]) # 인증 메시지도 슬림하게 캡션 처리
+                    if is_cert: st.caption(msg["text"])
                     else: st.write(msg["text"])
 
-        # 입력 창
-        if user_live_input := st.chat_input("한탄하기..."):
+        if user_live_input := st.chat_input("우측 오픈방에 익명으로 한탄하기..."):
             st.session_state["chat_messages"].append({"role": "user", "name": f"익명_{random.randint(100,999)}", "text": user_live_input})
             st.rerun()
