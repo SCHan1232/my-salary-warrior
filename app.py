@@ -5,7 +5,7 @@ import random
 
 # 1. 껄무새 다크모드 기반 최적화 설정
 st.set_page_config(
-    page_title="✨ 껄무새 - 2030 필수 자산 케어 v18", 
+    page_title="✨ 껄무새 - 2030 필수 자산 케어 v19", 
     page_icon="🦜",
     layout="centered" 
 )
@@ -140,14 +140,32 @@ else:
                 display_now = f"{current_price:,} 원" if not is_foreign else f"${current_price:,} (원화 약 {int(current_price*exchange_rate):,} 원)"
                 st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 15px; border-radius: 8px; background-color: #1A1D20;"><div style="font-size: 11px; color: #81C995;">✨ 현재 실시간 시세</div><div style="font-size: 17px; font-weight: 600; color: #81C995; margin-top: 5px;">{display_now}</div><div style="font-size: 11px; color: #FFFFFF; margin-top: 3px; font-weight: bold;">📊 {max_idx}년 간 순수 누적 수익률: {total_asset_growth:+.2f}%</div></div>""", unsafe_allow_html=True)
 
-            # 🛠️ [리팩토링] 1. 인스타 스토리 전용 올인원 캡처 팩 (오류 유발 구문 완전 삭제 및 등급 통합)
-            st.write("---")
-            st.markdown("### 📸 1. 인스타 스토리 박제용 캡처 카드 (여기만 스크린샷 하세요!)")
+            # 🛠️ [순서 변경 및 서체 동기화 완료!]
+            # 원래 2번이었던 과거 팩트 정산 보드를 1번으로 당겨 올렸습니다.
+            st.write("")
+            st.markdown("<h3 style='color: #FFFFFF; font-size: 17px;'>📊 1. 과거 데이터 기반 세부 실시간 정산</h3>", unsafe_allow_html=True)
+            res_col1, res_col2, res_col3 = st.columns(3)
+            with res_col1: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: #AAADB0; font-weight: 500;">🪙 총 지출 매몰 원금</div><div style="font-size: 22px; font-weight: 600; color: #FFFFFF; margin-top: 5px;">{int(total_seed):,} 원</div></div>""", unsafe_allow_html=True)
+            with res_col2: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: #81C995; font-weight: 500;">📈 현재 자산 가치 (오늘)</div><div style="font-size: 22px; font-weight: 600; color: #81C995; margin-top: 5px;">{int(final_value):,} 원</div></div>""", unsafe_allow_html=True)
+            with res_col3:
+                card_color = "#F28B82" if missed_money > 0 else "#8AB4F8"
+                status_text = "🚨 기회상실 순손실액" if missed_money > 0 else "🛡️ 리스크 최종 방어액"
+                st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: {card_color}; font-weight: 500;">{status_text}</div><div style="font-size: 22px; font-weight: 600; color: {card_color}; margin-top: 5px;">{"+" if missed_money > 0 else ""}{int(missed_money):,} 원</div></div>""", unsafe_allow_html=True)
+
+            # 원래 1번이었던 미래 행복회로 예측 보드를 2번 순서로 정렬했습니다.
+            st.write("")
+            st.markdown(f"<h3 style='color: #FFFFFF; font-size: 17px;'>🔮 2. 미래 {years}년 뒤 자산 행복회로 퀀텀점프 예측</h3>", unsafe_allow_html=True)
+            fut_col1, fut_col2 = st.columns(2)
+            with fut_col1: st.markdown(f"""<div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;"><div style="font-size: 12px; color: #D6BCFA; font-weight: 500;">🚀 미래 엔진에 투영된 과거 에너모멘텀</div><div style="font-size: 24px; font-weight: 600; color: #D6BCFA; margin-top: 5px;">{total_asset_growth:+.2f} % 직진 반영</div></div>""", unsafe_allow_html=True)
+            with fut_col2: st.markdown(f"""<div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;"><div style="font-size: 12px; color: #FFD700; font-weight: 500;">💰 미래 {years}년 뒤 최종 잔고 예측</div><div style="font-size: 24px; font-weight: 600; color: #FFD700; margin-top: 5px;">{int(future_value):,} 원</div></div>""", unsafe_allow_html=True)
+
+            # 📸 3. 인스타 스토리 박제용 올인원 캡처 팩 (제목 폰트 통일 완료!)
+            st.write("")
+            st.markdown("### 📸 3. 인스타 스토리 박제용 캡처 카드 (여기만 스크린샷 하세요!)")
             
             habit_clean_name = habit.split(" (")[0]
             asset_clean_name = target_asset.split(" (")[0]
 
-            # 등급 데이터 사전 매핑
             if missed_money > 0:
                 custom_cards = {
                     "탕후루/마라탕 수명 단축 쿨타임 (1회 18,000원)": {"title": "🩸 혈당 폭발 마라탕 중독자", "desc": "마라 국물과 설탕 코팅에 영혼을 저당 잡아 혈당을 올리는 사이, 본인의 시드머니는 주식 시장에서 완전히 녹아내리게 방치한 위대한 푸드 파이터"},
@@ -167,14 +185,14 @@ else:
             else:
                 card_info = {"title": "🛡️ 자산 수호 헷지 명인", "desc": "폭락 사이클을 영리한 탕진 소비로 우회 방어해 낸 금융 위기관리의 천재"}
 
-            # HTML 꼬임 방지를 위해 완벽히 검증된 Streamlit 네이티브 외곽선 연출 및 메트릭 패키징
+            # HTML/CSS 문자열 내 중괄호 충동 제거 ➡️ 깔끔한 Streamlit 네이티브 외곽선 보드 결합으로 100% 가독성 확보
             with st.container(border=True):
-                st.markdown(f"<center><b>🦜 GGUL-MUSAET AUDIT REPORT</b></center>", unsafe_allow_html=True)
-                st.markdown(f"<center><h3 style='margin:10px 0;'>\"{habit_clean_name}\"</h3></center>", unsafe_allow_html=True)
+                # 🛠️ [서체 연동 부위] 내부 제목 글씨체 및 타이포그래피 스타일을 상단 로고 서식과 연동하여 깔끔하게 변경했습니다.
+                st.markdown(f"<center><span style='font-family: sans-serif; font-size: 13px; font-weight: bold; letter-spacing: 2px; color: #9B51E0;'>📊 MY SHIBAL COST REPORT</span></center>", unsafe_allow_html=True)
+                st.markdown(f"<center><h2 style='font-family: sans-serif; font-size: 26px; font-weight: 800; color: #FFFFFF; margin: 10px 0;'>\"{habit_clean_name}\"</h2></center>", unsafe_allow_html=True)
                 st.caption(f"<center>참고 {asset_clean_name} 매수하고 미래로 {years}년 직진했다면?</center>", unsafe_allow_html=True)
                 st.write("")
                 
-                # 아기자기하고 보기 좋게 숫자를 배치
                 sub_col1, sub_col2 = st.columns(2)
                 with sub_col1:
                     st.metric(label="💸 사라진 내 원금", value=f"{int(total_seed):,} 원")
@@ -182,7 +200,6 @@ else:
                     st.metric(label="🔮 미래 최종 잔고 예측", value=f"{int(future_value):,} 원")
                 
                 st.write("")
-                # 등급과 일침 한탄 멘트를 카드 안으로 완전 병합!
                 if missed_money > 0:
                     st.error(f"🏅 **흑우 판정 등급: {card_info['title']}**\n\n{card_info['desc']}")
                 else:
@@ -190,18 +207,7 @@ else:
                 
                 st.caption("<center>📸 스마트폰 화면을 이 카드 크기에 맞춰 캡처 후 인스타 스토리에 올리세요!</center>", unsafe_allow_html=True)
 
-            # 2. 하단 상세 브리핑 브레이크다운
-            st.write("")
-            st.markdown("<h3 style='color: #FFFFFF; font-size: 17px;'>📊 2. 과거 데이터 기반 세부 실시간 정산</h3>", unsafe_allow_html=True)
-            res_col1, res_col2, res_col3 = st.columns(3)
-            with res_col1: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: #AAADB0; font-weight: 500;">🪙 총 지출 매몰 원금</div><div style="font-size: 22px; font-weight: 600; color: #FFFFFF; margin-top: 5px;">{int(total_seed):,} 원</div></div>""", unsafe_allow_html=True)
-            with res_col2: st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: #81C995; font-weight: 500;">📈 현재 자산 가치 (오늘)</div><div style="font-size: 22px; font-weight: 600; color: #81C995; margin-top: 5px;">{int(final_value):,} 원</div></div>""", unsafe_allow_html=True)
-            with res_col3:
-                card_color = "#F28B82" if missed_money > 0 else "#8AB4F8"
-                status_text = "🚨 기회상실 순손실액" if missed_money > 0 else "🛡️ 리스크 최종 방어액"
-                st.markdown(f"""<div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;"><div style="font-size: 12px; color: {card_color}; font-weight: 500;">{status_text}</div><div style="font-size: 22px; font-weight: 600; color: {card_color}; margin-top: 5px;">{"+" if missed_money > 0 else ""}{int(missed_money):,} 원</div></div>""", unsafe_allow_html=True)
-
-        # 3. 실시간 방명록 한탄방
+        # 5. 실시간 방명록 한탄방
         st.write("---")
         st.markdown("<h3 style='color: #FFFFFF; font-size: 17px;'>💬 실시간 월급루팡 익명 한탄방</h3>", unsafe_allow_html=True)
         user_comment = st.text_input("💬 한마디 남기기 (Enter 입력 시 등록)", placeholder="예: 위스키 마실 돈 모았으면 이미 테슬라 몰고 대리 불렀지..")
