@@ -131,25 +131,20 @@ else:
         price_unit = "$" if is_foreign else "원"
         missed_money = final_value - total_seed
 
-        # 2. 🧮 [신규 엔진] 주봉 기준 복리 상승률 및 미래 자산 예측 연산
-        # 수익률(배수) = 현재자산 / 원금
+        # 2. 미래 복리 예측 연산
         total_return_rate = final_value / total_seed if total_seed > 0 else 1.0
         total_weeks = years * 52
         
-        # 주간 복리 수익률 역산 공식: (총수익률)^(1/총주수) - 1
         if total_return_rate > 0:
             weekly_growth_rate = (total_return_rate) ** (1 / total_weeks) - 1
         else:
             weekly_growth_rate = 0.0
             
-        # 미래 N년 뒤 예측: 현재 가치가 지난 N년과 '똑같은 주간 복리 탄력'으로 달릴 경우 (거치식 복리 적용)
-        # 공식: 현재 가치 * (총수익률) -> 과거 성장동력이 그대로 유지된다고 가정하므로 총수익률을 한 번 더 곱하는 것과 수학적으로 같습니다.
         future_value = final_value * total_return_rate
 
         st.write("")
         st.markdown("<h3 style='color: #FFFFFF; font-size: 18px;'>📊 1. 과거 데이터 기반 실시간 정산</h3>", unsafe_allow_html=True)
         
-        # 1층 스코어보드 (과거 정산)
         res_col1, res_col2, res_col3 = st.columns(3)
         with res_col1:
             st.markdown(f"""
@@ -172,17 +167,16 @@ else:
             st.markdown(f"""
                 <div style="border: 1px solid #3C4043; padding: 18px; border-radius: 8px; background-color: #1E1F20;">
                     <div style="font-size: 12px; color: {card_color}; font-weight: 500;">{status_text}</div>
-                    <div style="font-size: 22px; font-weight: 600; color: {card_color Rim}; margin-top: 5px;">{"+" if missed_money > 0 else ""}{int(missed_money):,} 원</div>
+                    <div style="font-size: 22px; font-weight: 600; color: {card_color}; margin-top: 5px;">{"+" if missed_money > 0 else ""}{int(missed_money):,} 원</div>
                 </div>
             """, unsafe_allow_html=True)
 
-        # 🚀 [신규 UI] 미래 행복회로 예측 스코어보드 (2층)
+        # 미래 행복회로 예측 스코어보드
         st.write("")
         st.markdown(f"<h3 style='color: #FFFFFF; font-size: 18px;'>🔮 2. 미래 {years}년 뒤 자산 행복회로 예측</h3>", unsafe_allow_html=True)
         
         fut_col1, fut_col2 = st.columns(2)
         with fut_col1:
-            # 주봉 퍼센테이지 시각화
             st.markdown(f"""
                 <div style="border: 1px solid #4A3E7D; padding: 18px; border-radius: 8px; background-color: #1A1B2F;">
                     <div style="font-size: 12px; color: #D6BCFA; font-weight: 500;">⚡ 과거 주봉 평균 상승률 (복리 기준)</div>
@@ -203,7 +197,6 @@ else:
         st.markdown("<h3 style='color: #FFFFFF; font-size: 18px;'>✨ Gemini 종합 브리핑</h3>", unsafe_allow_html=True)
         habit_name = habit.split(" (")[0]
         
-        # 제미나이 팩폭 총평 (미래 예측 멘트 추가)
         if missed_money > 0:
             st.markdown(f"""
                 <div style="background: linear-gradient(135deg, #1A1B2F 0%, #16161D 100%); border: 1px solid #4A3E7D; padding: 22px; border-radius: 12px; color: #FFFFFF; line-height: 1.7; font-size: 14.5px;">
